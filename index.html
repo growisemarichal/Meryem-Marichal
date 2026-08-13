@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piloto de Segunda — La guía completa del proceso | marichaaall</title>
+<meta name="description" content="El proceso completo para ser Piloto de Segunda de la Marina Mercante en España: documentación, prácticas, prueba de idoneidad. Escrito por una oficial que ya pasó por aquí.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --deep: #0a0e14;
+    --deep-2: #0f141c;
+    --secondary: #141a24;
+    --blush: #e07095;
+    --blush-glow: #f0a0bc;
+    --foreground: #f2ede8;
+    --mist: #9aa3b0;
+    --border-blush: rgba(224, 112, 149, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--foreground);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Fraunces', serif;
+    letter-spacing: -0.02em;
+  }
+
+  .mono-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--mist);
+  }
+
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ---------- NAVBAR ---------- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 0;
+    background: linear-gradient(to bottom, rgba(10,14,20,0.9), transparent);
+    backdrop-filter: blur(4px);
+  }
+  nav .wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--foreground);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--blush); }
+  .nav-cta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--foreground);
+    border: 1px solid var(--border-blush);
+    padding: 0.6rem 1.2rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .nav-cta:hover {
+    border-color: var(--blush);
+    background: rgba(224,112,149,0.08);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 20%, rgba(224,112,149,0.10), transparent),
+      linear-gradient(180deg, var(--deep) 0%, var(--deep-2) 100%);
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      linear-gradient(to right, var(--blush) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--blush) 1px, transparent 1px);
+    background-size: 90px 90px;
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+    padding-top: 5rem;
+    opacity: 0;
+    animation: rise 1s ease forwards 0.15s;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .eyebrow-line { width: 32px; height: 1px; background: var(--blush); }
+  .hero h1 {
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    font-weight: 600;
+    line-height: 1.08;
+    color: var(--foreground);
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--blush);
+    text-shadow: 0 0 40px rgba(224,112,149,0.35);
+  }
+  .hero p.lead {
+    margin-top: 1.75rem;
+    font-size: 1.15rem;
+    color: var(--mist);
+    max-width: 540px;
+    line-height: 1.65;
+  }
+  .hero-actions {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .btn-bracket {
+    position: relative;
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--deep);
+    background: var(--blush);
+    padding: 1rem 2rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid var(--blush);
+  }
+  .btn-bracket:hover {
+    background: transparent;
+    color: var(--blush);
+    letter-spacing: 0.14em;
+  }
+  .link-ghost {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mist);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s ease;
+  }
+  .link-ghost:hover { color: var(--blush); }
+
+  .hero-stats {
+    margin-top: 4rem;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: left; }
+  .stat b {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--blush);
+  }
+  .stat span { display: block; margin-top: 0.3rem; }
+  .stat-divider { width: 1px; background: var(--border-blush); }
+
+  /* ---------- SECTION GENERIC ---------- */
+  section { position: relative; padding: 6rem 0; }
+  .section-alt { background: var(--secondary); }
+  .top-line {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border-blush), transparent);
+  }
+  .section-head { max-width: 620px; }
+  .section-head h2 {
+    margin-top: 1rem;
+    font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+    font-weight: 600;
+    color: var(--foreground);
+    line-height: 1.15;
+  }
+  .section-head p {
+    margin-top: 1.25rem;
+    color: var(--mist);
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  /* ---------- PAIN GRID ---------- */
+  .pain-grid {
+    margin-top: 3.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--border-blush);
+  }
+  .pain-card {
+    background: var(--deep);
+    padding: 2rem;
+    transition: background 0.3s ease;
+  }
+  .pain-card:hover { background: var(--secondary); }
+  .pain-card .num { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--mist); }
+  .pain-icon {
+    width: 30px; height: 30px;
+    margin-top: 1rem;
+    color: var(--blush);
+  }
+  .pain-card h3 {
+    margin-top: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+  .pain-card p {
+    margin-top: 0.7rem;
+    font-size: 0.9rem;
+    color: var(--mist);
+    line-height: 1.6;
+  }
+
+  /* ---------- MODULES ---------- */
+  .modules-grid {
+    margin-top: 3.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+  .module-card {
+    border: 1px solid var(--border-blush);
+    background: var(--deep);
+    padding: 1.75rem;
+    transition: all 0.35s ease;
+  }
+  .module-card:hover {
+    border-color: rgba(224,112,149,0.5);
+    transform: translateY(-4px);
+  }
+  .module-card .num { color: var(--blush); }
+  .module-card h3 { margin-top: 0.7rem; font-size: 1.15rem; font-weight: 600; }
+  .module-card ul { margin-top: 1.1rem; list-style: none; }
+  .module-card li {
+    display: flex; gap: 0.6rem;
+    font-size: 0.87rem;
+    color: var(--mist);
+    padding: 0.35rem 0;
+    line-height: 1.5;
+  }
+  .module-card li::before {
+    content: '✓';
+    color: var(--blush);
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    margin-top: 0.15rem;
+  }
+
+  .bonus-strip {
+    margin-top: 3rem;
+    border: 1px dashed var(--border-blush);
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .bonus-strip p { color: var(--mist); font-size: 0.95rem; }
+  .bonus-strip b { color: var(--foreground); }
+  .bonus-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--blush);
+    border: 1px solid var(--border-blush);
+    padding: 0.4rem 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .modules-footer {
+    margin-top: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  .modules-footer p { max-width: 480px; color: var(--mist); }
+
+  /* ---------- TESTIMONIALS PLACEHOLDER ---------- */
+  .testi-empty {
+    margin-top: 3.5rem;
+    border: 1px solid var(--border-blush);
+    padding: 3.5rem 2rem;
+    text-align: center;
+    max-width: 620px;
+  }
+  .testi-empty .stars { color: var(--border-blush); font-size: 1.3rem; letter-spacing: 0.3rem; }
+  .testi-empty p {
+    margin-top: 1.2rem;
+    color: var(--mist);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* ---------- COMING SOON ---------- */
+  .coming-box {
+    border: 1px solid var(--border-blush);
+    background: rgba(224,112,149,0.04);
+    padding: 3.5rem 2rem;
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+  .coming-box .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--blush);
+  }
+  .coming-box h2 {
+    margin-top: 1.2rem;
+    font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+    font-weight: 600;
+  }
+  .coming-box p.desc {
+    margin-top: 1.2rem;
+    color: var(--mist);
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+  .coming-tags {
+    margin-top: 1.75rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--mist);
+  }
+  .coming-tags span { display: flex; align-items: center; gap: 0.4rem; }
+  .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border-blush); }
+
+  /* ---------- FAQ ---------- */
+  .faq-wrap { max-width: 680px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--border-blush); }
+  .faq-item:first-child { border-top: 1px solid var(--border-blush); }
+  .faq-q {
+    width: 100%;
+    background: none; border: none;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1.5rem;
+    padding: 1.4rem 0;
+    text-align: left;
+    cursor: pointer;
+    color: var(--foreground);
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+  }
+  .faq-q:hover { color: var(--blush); }
+  .faq-icon { color: var(--blush); font-size: 1.2rem; flex-shrink: 0; }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .faq-a p { padding-bottom: 1.4rem; color: var(--mist); line-height: 1.65; font-size: 0.95rem; }
+  .faq-item.open .faq-a { max-height: 300px; }
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta { text-align: center; }
+  .final-cta .wrap { max-width: 680px; }
+  .final-cta h2 {
+    margin-top: 1.2rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  .final-cta p.lead {
+    margin-top: 1.5rem;
+    color: var(--mist);
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+  .final-cta .btn-bracket { margin-top: 2.2rem; padding: 1.1rem 2.4rem; }
+  .final-cta .fine {
+    margin-top: 1.75rem;
+    color: rgba(224,112,149,0.5);
+  }
+
+  footer {
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--border-blush);
+    text-align: center;
+  }
+  footer p { color: var(--mist); font-size: 0.82rem; }
+
+  @media (max-width: 640px) {
+    .hero-stats { gap: 1.25rem; }
+    section { padding: 4.5rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo">marich<span>aaa</span>ll</a>
+    <a href="https://payhip.com/b/OFoZs" class="nav-cta">Conseguir la guía</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="wrap hero-content">
+    <div class="eyebrow">
+      <span class="eyebrow-line"></span>
+      <span class="mono-label">Piloto de la Marina Mercante · OOW Unlimited</span>
+    </div>
+    <h1>La guía que me hubiera salvado <em>un año de mi vida.</em></h1>
+    <p class="lead">El proceso completo para ser Piloto de Segunda de la Marina Mercante en España: documentación, prácticas, prueba de idoneidad y todo lo que nadie te explica. Escrito por una oficial que ya pasó por aquí.</p>
+    <div class="hero-actions">
+      <a href="https://payhip.com/b/OFoZs" class="btn-bracket">Conseguir la guía en PDF</a>
+      <a href="#producto" class="link-ghost">Ver qué incluye ↓</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><b>47 pág.</b><span class="mono-label">Guía completa</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><b>10 caps.</b><span class="mono-label">Paso a paso</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><b>+350</b><span class="mono-label">Contactos de navieras</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section>
+  <div class="top-line"></div>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="mono-label">El problema · 01</p>
+      <h2>Lo que nadie te explica cuando decides embarcar.</h2>
+      <p>El obstáculo no suele ser la carrera. Es la burocracia que viene después.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <p class="num">01</p>
+        <h3>No sabes por dónde empezar</h3>
+        <p>El proceso está disperso en el BOE, en distintas resoluciones y en criterios de cada Capitanía. Sin guía, se pierden meses solo entendiendo qué toca hacer primero.</p>
+      </div>
+      <div class="pain-card">
+        <p class="num">02</p>
+        <h3>La burocracia te bloquea</h3>
+        <p>Capitanía Marítima, ISM, libreta de navegación, certificados STCW... un error en el orden te puede costar una convocatoria entera. A mí me costó un año.</p>
+      </div>
+      <div class="pain-card">
+        <p class="num">03</p>
+        <h3>La documentación a bordo se escapa</h3>
+        <p>El libro de formación, los sellos del capitán, los Anexos III y IV. Una vez el barco zarpa, es prácticamente imposible conseguirlos.</p>
+      </div>
+      <div class="pain-card">
+        <p class="num">04</p>
+        <h3>El tiempo se va sin avanzar</h3>
+        <p>Sin una ruta clara, lo que debería durar meses se convierte en años de gestiones y esperas innecesarias. Esta guía existe para que tú no pierdas lo que yo perdí.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section id="producto" class="section-alt">
+  <div class="top-line"></div>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="mono-label">Contenido · 02</p>
+      <h2>47 páginas con todo lo que necesitas saber.</h2>
+      <p>No es un resumen del BOE. Es el proceso completo explicado por alguien que lo vivió, con los errores incluidos, para que tú no cometas los mismos.</p>
+    </div>
+
+    <div class="modules-grid">
+      <div class="module-card">
+        <p class="mono-label num">Anexo</p>
+        <h3>El camino desde cero</h3>
+        <ul>
+          <li>Cómo llegar a Piloto de Segunda sin experiencia previa</li>
+          <li>La carrera universitaria: Grado en Ingeniería Náutica</li>
+          <li>Vías de acceso y centros donde estudiar en España</li>
+          <li>Los certificados STCW y cuándo tramitarlos</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <p class="mono-label num">Parte I</p>
+        <h3>La base legal</h3>
+        <ul>
+          <li>Cómo funciona el sistema normativo que regula tu titulación</li>
+          <li>El Real Decreto 269/2022: la norma que lo regula todo</li>
+          <li>Glosario de términos clave: Libreta, DIM, ISM, Capitanía...</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <p class="mono-label num">Parte II</p>
+        <h3>Antes de embarcar</h3>
+        <ul>
+          <li>Documentación obligatoria paso a paso</li>
+          <li>Buques válidos para las prácticas de Piloto de 2ª</li>
+          <li>Estrategias reales para conseguir plaza de embarco</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <p class="mono-label num">Parte III</p>
+        <h3>Durante el embarco</h3>
+        <ul>
+          <li>Gestión diaria del Libro de Registro de Formación</li>
+          <li>El sello mensual del capitán: por qué no puedes olvidarlo</li>
+          <li>Horas al timón: cómo registrarlas correctamente</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <p class="mono-label num">Parte IV–V</p>
+        <h3>Salir del buque y el título</h3>
+        <ul>
+          <li>Papeles que debes conseguir ANTES de desembarcar</li>
+          <li>La prueba de idoneidad: pasos, plazos y causas de exclusión</li>
+          <li>Cómo elegir Capitanía y lo que me pasó en Tenerife</li>
+        </ul>
+      </div>
+      <div class="module-card">
+        <p class="mono-label num">Parte VI</p>
+        <h3>Extras y preguntas frecuentes</h3>
+        <ul>
+          <li>Régimen laboral durante las prácticas: REM e ISM</li>
+          <li>¿Puedo hacer prácticas en cruceros? ¿Y en yates?</li>
+          <li>Más de 10 preguntas frecuentes resueltas con detalle</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bonus-strip">
+      <p><b>+ Directorio de más de 350 contactos</b> de navieras, agencias y cruceros para pedir tus prácticas.</p>
+      <span class="bonus-tag">Incluido en el pack</span>
+    </div>
+
+    <div class="modules-footer">
+      <p>Toda la información referenciada directamente desde el BOE y la convocatoria vigente, con advertencias sobre lo que cambia cada año y cómo verificarlo.</p>
+      <a href="https://payhip.com/b/OFoZs" class="btn-bracket">Conseguir la guía completa en PDF</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS (vacío / honesto) -->
+<section>
+  <div class="top-line"></div>
+  <div class="wrap" style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+    <div class="section-head" style="text-align:center;">
+      <p class="mono-label">Opiniones · 03</p>
+      <h2>Lo que dicen quienes ya la tienen.</h2>
+    </div>
+    <div class="testi-empty">
+      <p class="stars">★ ★ ★ ★ ★</p>
+      <p>Este espacio está esperando tus opiniones reales. Si ya tienes la guía, cuéntame qué te pareció — tu testimonio podría estar aquí.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMING SOON -->
+<section class="section-alt">
+  <div class="wrap">
+    <div class="coming-box">
+      <span class="badge mono-label">◷ Próximamente</span>
+      <h2>Asesorías personalizadas</h2>
+      <p class="desc">En un futuro próximo abriré sesiones de asesoría individual para acompañarte en tu carrera en la marina mercante: orientación sobre embarcos, dudas del proceso, estrategia profesional y mucho más.</p>
+      <div class="coming-tags">
+        <span>⚓ Asesoría 1 a 1</span>
+        <span class="dot"></span>
+        <span>⚓ Orientación de carrera</span>
+        <span class="dot"></span>
+        <span>⚓ Revisión de documentación</span>
+      </div>
+      <p class="mono-label" style="margin-top:2rem; color:rgba(224,112,149,0.6);">Mientras tanto — la guía tiene todo lo que necesitas para empezar</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="top-line"></div>
+  <div class="wrap">
+    <div class="section-head" style="margin: 0 auto 3rem; text-align:center;">
+      <p class="mono-label">Dudas · 04</p>
+      <h2>Preguntas frecuentes</h2>
+    </div>
+    <div class="faq-wrap" id="faq-wrap">
+      <div class="faq-item open">
+        <button class="faq-q">¿Esto es un curso o una guía? <span class="faq-icon">−</span></button>
+        <div class="faq-a"><p>Es una guía en formato PDF, no un curso. Son 47 páginas con el proceso completo para llegar a ser Piloto de Segunda de la Marina Mercante en España: documentación, embarco, libro de formación, prueba de idoneidad y solicitud del título. Todo referenciado en el BOE vigente.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">¿Para quién está pensada esta guía? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Para estudiantes de Grado en Ingeniería Náutica que están a punto de empezar sus prácticas, para quienes ya están embarcados y quieren asegurarse de no cometer errores con la documentación, y para cualquiera que quiera entender el proceso completo antes de comenzar.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">¿Está actualizada con la normativa vigente? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Sí. La guía está basada en el Real Decreto 269/2022 y en la convocatoria vigente de la Dirección General de la Marina Mercante, con las resoluciones y órdenes más recientes aplicables.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">¿Cómo recibo la guía después de comprarla? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Tras la compra en Payhip recibes acceso inmediato al PDF. Lo puedes descargar y guardar en cualquier dispositivo.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">¿Vale también si estudio fuera de Canarias? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Sí. La normativa es nacional. La guía menciona algunas diferencias de criterio entre Capitanías Marítimas y te explica cómo gestionarlas. Es válida para cualquier universidad española que imparta el Grado en Ingeniería Náutica.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta section-alt">
+  <div class="top-line"></div>
+  <div class="wrap">
+    <p class="mono-label">Acción final</p>
+    <h2>Ya empezaste. Ahora tu única opción es avanzar.</h2>
+    <p class="lead">Consigue la guía que a mí me hubiera ahorrado un año. El proceso completo, la documentación, los errores que no cometerás, y lo que no está en el BOE pero tienes que saber.</p>
+    <a href="https://payhip.com/b/OFoZs" class="btn-bracket">Conseguir la guía en PDF</a>
+    <p class="mono-label fine">Pago único · Acceso inmediato · Formato PDF</p>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 marichaaall — Mery Elatmani Marichal · Piloto de la Marina Mercante</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-icon').textContent = '+';
+      });
+      if (!wasOpen) {
+        item.classList.add('open');
+        item.querySelector('.faq-icon').textContent = '−';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
