@@ -87,7 +87,21 @@
     text-decoration: none;
     transition: all 0.3s ease;
   }
-  .nav-cta:hover {
+  .nav-links {
+  display: flex;
+  gap: 2rem;
+}
+.nav-link {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.8rem;
+  color: var(--mist);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.nav-link:hover { color: var(--blush); }
+@media (max-width: 780px) {
+  .nav-links { display: none; }
+}.nav-cta:hover {
     border-color: var(--blush);
     background: rgba(224,112,149,0.08);
   }
@@ -462,13 +476,89 @@
     .hero-stats { gap: 1.25rem; }
     section { padding: 4.5rem 0; }
   }
-</style>
+/* ---------- QUIEN SOY ---------- */
+.bio-section { padding: 8rem 0; }
+.bio-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.bio-content .eyebrow { margin-bottom: 1.5rem; }
+.bio-content h2 {
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--foreground);
+}
+.bio-content h2 em {
+  font-style: italic;
+  color: var(--blush);
+  text-shadow: 0 0 40px rgba(224,112,149,0.35);
+}
+.bio-content p {
+  margin-top: 1.75rem;
+  color: var(--mist);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 480px;
+}
+.bio-img {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  border: 1px solid var(--border-blush);
+}
+.bio-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05);
+}
+.scroll-hint {
+  margin-top: 3.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--mist);
+}
+@media (max-width: 900px) {
+  .bio-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .bio-img { order: -1; aspect-ratio: 4/3; }
+}
+
+/* ---------- CONTACTO ---------- */
+.contact-grid {
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  max-width: 680px;
+}
+.contact-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border-blush);
+  padding: 1.5rem 1.75rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.contact-card:hover { border-color: var(--blush); background: rgba(224,112,149,0.05); }
+.contact-card .handle { color: var(--foreground); font-weight: 600; }
+.contact-card .platform { color: var(--mist); font-size: 0.85rem; margin-top: 0.25rem; }
+.contact-card .arrow { color: var(--blush); font-size: 1.2rem; }</style>
 </head>
 <body>
 
-<nav>
+<<nav>
   <div class="wrap">
     <a href="#" class="logo">marich<span>aaa</span>ll</a>
+    <div class="nav-links">
+      <a href="#quien-soy" class="nav-link">Quién soy</a>
+      <a href="#producto" class="nav-link">La guía</a>
+      <a href="#contacto" class="nav-link">Contacto</a>
+    </div>
     <a href="https://payhip.com/b/OFoZs" class="nav-cta">Conseguir la guía</a>
   </div>
 </nav>
@@ -501,7 +591,26 @@
   </div>
 </section>
 
-<!-- PAIN -->
+<!-- QUIEN SOY -->
+<section class="bio-section" id="quien-soy">
+  <div class="top-line"></div>
+  <div class="wrap bio-grid">
+    <div class="bio-content">
+      <div class="eyebrow">
+        <span class="eyebrow-line"></span>
+        <span class="mono-label">¿Quién soy?</span>
+      </div>
+      <h2>Esto no empezó en un barco.<br>Empezó siendo <em>la primera en atreverse.</em></h2>
+      <p>Soy Mery, Piloto de la Marina Mercante y la primera de mi familia en entrar en este sector. Nadie me explicó el camino — lo fui descubriendo a base de errores, un año perdido en burocracia, y aprender sobre la marcha lo que ninguna clase enseña. Hoy comparto lo que a mí me hubiera ahorrado ese año, para que tú no tengas que perderlo.</p>
+      <div class="scroll-hint">
+        <span class="mono-label">Scroll para seguir</span>
+      </div>
+    </div>
+    <div class="bio-img">
+      <img src="quien-soy.jpg" alt="Mery, Piloto de la Marina Mercante">
+    </div>
+  </div>
+</section><!-- PAIN -->
 <section>
   <div class="top-line"></div>
   <div class="wrap">
@@ -682,7 +791,32 @@
   </div>
 </section>
 
-<!-- FINAL CTA -->
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="top-line"></div>
+  <div class="wrap">
+    <div class="section-head" style="margin:0 auto 1rem; text-align:center;">
+      <p class="mono-label">Contacto</p>
+      <h2>Sígueme y escríbeme</h2>
+    </div>
+    <div class="contact-grid" style="margin-left:auto; margin-right:auto;">
+      <a href="https://instagram.com/iiitsmery" target="_blank" class="contact-card">
+        <div>
+          <p class="handle">@iiitsmery</p>
+          <p class="platform">Instagram · mindset y disciplina</p>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+      <a href="https://instagram.com/marichaaall" target="_blank" class="contact-card">
+        <div>
+          <p class="handle">@marichaaall</p>
+          <p class="platform">Instagram · contenido técnico</p>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section><!-- FINAL CTA -->
 <section class="final-cta section-alt">
   <div class="top-line"></div>
   <div class="wrap">
