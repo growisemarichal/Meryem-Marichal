@@ -150,6 +150,19 @@
     opacity: 0;
     animation: rise 1s ease forwards 0.15s;
   }
+  .hero-logo-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.hero-logo {
+  width: min(420px, 55vw);
+  height: auto;
+  filter: drop-shadow(0 4px 24px rgba(0,0,0,0.45));
+}
   @keyframes rise {
     from { opacity: 0; transform: translateY(24px); }
     to { opacity: 1; transform: translateY(0); }
