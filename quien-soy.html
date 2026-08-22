@@ -19,7 +19,19 @@
     <div class="nav-links">
       <a href="quien-soy.html" class="nav-link">Quién soy</a>
       <a href="la-guia.html" class="nav-link">La guía</a>
-      <a href="contacto.html" class="nav-link">Contacto</a>
+      <div class="nav-dropdown">
+  <button class="nav-link nav-dropdown-btn">Contacto</button>
+  <div class="nav-dropdown-menu">
+    <a href="https://instagram.com/iiitsmery" target="_blank" class="nav-dropdown-item">
+      <span class="dropdown-handle">@iiitsmery</span>
+      <span class="dropdown-sub">Instagram</span>
+    </a>
+    <a href="https://instagram.com/marichaaall" target="_blank" class="nav-dropdown-item">
+      <span class="dropdown-handle">@marichaaall</span>
+      <span class="dropdown-sub">Instagram</span>
+    </a>
+  </div>
+</div>
     </div>
     <a href="https://payhip.com/b/OFoZs" class="nav-cta">Conseguir la guía</a>
   </div>
@@ -147,5 +159,16 @@
   <p>© 2026 marichaaall — Mery Elatmani Marichal · Piloto de la Marina Mercante</p>
 </footer>
 
+<script>
+  document.querySelectorAll('.nav-dropdown-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      btn.closest('.nav-dropdown').classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.nav-dropdown.open').forEach(el => el.classList.remove('open'));
+  });
+</script>
 </body>
 </html>

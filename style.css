@@ -604,3 +604,49 @@
 .bio-grid-reverse .bio-img {
   order: 1;
 }
+.nav-dropdown {
+  position: relative;
+}
+.nav-dropdown-btn {
+  background: none;
+  border: none;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer;
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  min-width: 220px;
+  background: var(--secondary);
+  border: 1px solid var(--border-blush);
+  border-radius: 14px;
+  padding: 0.5rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.nav-dropdown.open .nav-dropdown-menu {
+  display: flex;
+}
+.nav-dropdown-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+.nav-dropdown-item:hover {
+  background: rgba(224,112,149,0.08);
+}
+.dropdown-handle {
+  color: var(--foreground);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.dropdown-sub {
+  color: var(--mist);
+  font-size: 0.78rem;
+  margin-top: 0.15rem;
+}
