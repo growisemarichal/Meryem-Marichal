@@ -535,3 +535,72 @@
 .contact-card .handle { color: var(--foreground); font-weight: 600; }
 .contact-card .platform { color: var(--mist); font-size: 0.85rem; margin-top: 0.25rem; }
 .contact-card .arrow { color: var(--blush); font-size: 1.2rem; }
+.philosophy-section {
+  padding: 6rem 0;
+}
+
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.philosophy-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.philosophy-card h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.philosophy-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.philosophy-closing {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 3.5rem 2rem;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.philosophy-closing h3 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 600;
+  margin: 1rem 0 1.5rem;
+}
+
+.philosophy-closing p {
+  max-width: 640px;
+  margin: 0 auto;
+  opacity: 0.85;
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .philosophy-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.bio-img-placeholder {
+  background: #000;
+  min-height: 400px;
+}
+
+.bio-grid-reverse .bio-content {
+  order: 2;
+}
+
+.bio-grid-reverse .bio-img {
+  order: 1;
+}
