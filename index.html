@@ -17,7 +17,7 @@
   <div class="wrap">
     <a href="index.html" class="logo"><img src="marichal-logo.png" alt="Marichal" class="nav-logo-img"></a>
     <div class="nav-links">
-            <a href="quien-soy.html" class="nav-link">Quién soy</a>
+      <a href="quien-soy.html" class="nav-link">Quién soy</a>
       <a href="index.html#guia" class="nav-link">La guía</a>
       <a href="index.html#guia" class="nav-link">Qué incluye</a>
       <a href="index.html#testimonios" class="nav-link">Testimonios</a>
@@ -90,7 +90,7 @@
       <div class="stat"><b>10 caps.</b><span class="mono-label">Paso a paso</span></div>
       <div class="stat-divider"></div>
       <div class="stat"><b>+300</b><span class="mono-label">Contactos de navieras</span></div>
-        </div>
+    </div>
   </div>
   -->
     <div class="scroll-indicator">
@@ -210,7 +210,7 @@
 
     <div class="bonus-strip">
       <p><b>+ Directorio de más de 300 contactos</b> de navieras, agencias y cruceros para pedir tus prácticas.</p>
-            <span class="bonus-tag">Incluido en el pack</span>
+      <span class="bonus-tag">Incluido en el pack</span>
     </div>
 
     <div class="modules-footer">
@@ -371,8 +371,6 @@
   });
 </script>
 
-
-
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
 </script>
@@ -384,24 +382,54 @@ const canvas = document.getElementById('fanCanvas');
 
 if (wrap && canvas) {
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
-  camera.position.set(0, 0, 9);
+  const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
+  camera.position.set(0, 0, 7);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(wrap.clientWidth, wrap.clientHeight);
 
+  scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+  const key = new THREE.DirectionalLight(0xffffff, 0.6);
+  key.position.set(2, 3, 5);
+  scene.add(key);
+
   const group = new THREE.Group();
   scene.add(group);
 
-  const loader = new THREE.TextureLoader();
   const imgCount = 9;
-  const cardW = 1.5, cardH = cardW * (1272 / 900);
-  const radius = 6.5;
-  const curve = 0.18; // cuanto se "doblan" las tarjetas — sube o baja este número para más o menos curva
+  const cardW = 1.7, cardH = cardW * (1272 / 900);
+  const radius = 4.2;
+  const angleStep = 0.24;
+  const curve = 0.55;
+
+  function roundedTexture(url, radiusPx = 40) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = img.width; c.height = img.height;
+        const ctx = c.getContext('2d');
+        ctx.beginPath();
+        ctx.moveTo(radiusPx, 0);
+        ctx.arcTo(c.width, 0, c.width, c.height, radiusPx);
+        ctx.arcTo(c.width, c.height, 0, c.height, radiusPx);
+        ctx.arcTo(0, c.height, 0, 0, radiusPx);
+        ctx.arcTo(0, 0, c.width, 0, radiusPx);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, 0, 0);
+        const tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        resolve(tex);
+      };
+      img.src = url;
+    });
+  }
 
   function makeBentGeometry(w, h) {
-    const geo = new THREE.PlaneGeometry(w, h, 24, 1);
+    const geo = new THREE.PlaneGeometry(w, h, 30, 1);
     const pos = geo.attributes.position;
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i);
@@ -412,23 +440,24 @@ if (wrap && canvas) {
     return geo;
   }
 
-  for (let i = 0; i < imgCount; i++) {
-    const num = String(i + 1).padStart(2, '0');
-    const tex = loader.load(`anexo-${num}.jpg`);
-    tex.colorSpace = THREE.SRGBColorSpace;
+  (async () => {
+    for (let i = 0; i < imgCount; i++) {
+      const num = String(i + 1).padStart(2, '0');
+      const tex = await roundedTexture(`anexo-${num}.jpg`);
 
-    const mesh = new THREE.Mesh(
-      makeBentGeometry(cardW, cardH),
-      new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide })
-    );
+      const mesh = new THREE.Mesh(
+        makeBentGeometry(cardW, cardH),
+        new THREE.MeshStandardMaterial({ map: tex, side: THREE.DoubleSide, roughness: 0.9, metalness: 0 })
+      );
 
-    const angle = (i - (imgCount - 1) / 2) * 0.34;
-    mesh.position.x = Math.sin(angle) * radius;
-    mesh.position.z = -Math.cos(angle) * radius + radius;
-    mesh.rotation.y = -angle;
+      const angle = (i - (imgCount - 1) / 2) * angleStep;
+      mesh.position.x = Math.sin(angle) * radius;
+      mesh.position.z = Math.cos(angle) * radius - radius;
+      mesh.rotation.y = -angle;
 
-    group.add(mesh);
-  }
+      group.add(mesh);
+    }
+  })();
 
   let targetRotY = 0, currentRotY = 0, isDragging = false, startX = 0, startRot = 0;
 
@@ -438,7 +467,7 @@ if (wrap && canvas) {
   });
   wrap.addEventListener('pointermove', (e) => {
     if (!isDragging) return;
-    targetRotY = startRot + (e.clientX - startX) * 0.005;
+    targetRotY = startRot + (e.clientX - startX) * 0.006;
   });
   wrap.addEventListener('pointerup', () => { isDragging = false; });
   wrap.addEventListener('pointerleave', () => { isDragging = false; });
