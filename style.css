@@ -41,7 +41,7 @@
     padding: 0 1.5rem;
   }
 
-  /* ---------- NAVBAR (pÃ­ldora flotante) ---------- */
+  /* ---------- NAVBAR (pÃƒÂ­ldora flotante) ---------- */
   nav {
     position: fixed;
     top: 1.25rem; left: 0; right: 0;
@@ -336,7 +336,7 @@
     line-height: 1.5;
   }
   .module-card li::before {
-    content: 'âœ“';
+    content: '\2713';
     color: var(--blush);
     flex-shrink: 0;
     font-size: 0.8rem;
@@ -711,8 +711,8 @@
 
 /* ---------- SCROLL REVEAL ---------- */
 /* Estado inicial: invisible y un poco desplazado hacia abajo.
-   El JS le aÃ±ade la clase .is-visible cuando el bloque entra en pantalla,
-   y esta transiciÃ³n hace que aparezca suave en vez de con un salto. */
+   El JS le aÃƒÂ±ade la clase .is-visible cuando el bloque entra en pantalla,
+   y esta transiciÃƒÂ³n hace que aparezca suave en vez de con un salto. */
 .reveal {
   opacity: 0;
   transform: translateY(36px);
@@ -723,12 +723,12 @@
   opacity: 1;
   transform: translateY(0);
 }
-/* Para que dos elementos de la misma secciÃ³n no aparezcan a la vez */
+/* Para que dos elementos de la misma secciÃƒÂ³n no aparezcan a la vez */
 .reveal-delay-1 { transition-delay: 0.15s; }
 .reveal-delay-2 { transition-delay: 0.3s; }
 
 /* Si el usuario tiene activado "reducir movimiento" en su sistema,
-   respetamos eso y quitamos la animaciÃ³n por accesibilidad */
+   respetamos eso y quitamos la animaciÃƒÂ³n por accesibilidad */
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
 }
@@ -742,7 +742,7 @@
   }
 }
 
-/* ---------- TEXTURA DE GRANO SOBRE LAS IMÃGENES ---------- */
+/* ---------- TEXTURA DE GRANO SOBRE LAS IMÃƒÂGENES ---------- */
 .bio-img::after {
   content: '';
   position: absolute;
@@ -770,4 +770,42 @@
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
+}
+
+/* ---------- TESTIMONIOS REALES ---------- */
+.testi-grid {
+  margin-top: 3.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.testi-card {
+  border: 1px solid var(--border-blush);
+  background: var(--deep);
+  padding: 1.75rem;
+  transition: all 0.35s ease;
+}
+.testi-card:hover {
+  border-color: rgba(224,112,149,0.5);
+  transform: translateY(-4px);
+}
+.testi-card .quote-mark {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: var(--blush);
+  line-height: 1;
+}
+.testi-card .testi-text {
+  margin-top: 0.5rem;
+  color: var(--foreground);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.testi-card .testi-source {
+  margin-top: 1.2rem;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mist);
 }
