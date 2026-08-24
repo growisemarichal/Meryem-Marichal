@@ -837,22 +837,48 @@
   }
   .lock-box h2 { margin-top: 1.4rem; }
 
-    /* ---------- ANEXOS / ABANICO 3D ---------- */
-  .fan-canvas-wrap {
-    width: 100%;
-    height: 460px;
-    margin-top: 1rem;
-    cursor: grab;
+    /* ---------- ANEXOS / GALERÍA SCROLL HORIZONTAL ---------- */
+  .anexos-scroll {
+    position: relative;
+    height: 480vh;
+    background: var(--deep-2);
   }
-  .fan-canvas-wrap:active { cursor: grabbing; }
-  #fanCanvas {
-    width: 100%; height: 100%; display: block; touch-action: none;
-    filter: drop-shadow(0 25px 35px rgba(0,0,0,0.55));
-  }  .fan-hint {
+  .anexos-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .anexos-track {
+    display: flex;
+    gap: 3vw;
+    padding-left: 8vw;
+    padding-right: 8vw;
+    will-change: transform;
+  }
+  .anexos-slide {
+    flex: 0 0 auto;
+    width: min(58vw, 460px);
+    height: 80vh;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.55);
+  }
+  .anexos-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .anexos-hint {
+    position: sticky;
+    top: calc(100vh - 3.5rem);
     text-align: center;
-    margin-top: 0.75rem;
     opacity: 0.5;
+    pointer-events: none;
   }
   @media (max-width: 640px) {
-    .fan-canvas-wrap { height: 320px; }
-  }
+    .anexos-scroll { height: 620vh; }
+    .anexos-slide { width: 78vw; height: 62vh; }

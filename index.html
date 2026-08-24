@@ -229,10 +229,23 @@
       <h2>Así es la guía, página a página.</h2>
     </div>
   </div>
-  <div id="fanCanvasWrap" class="fan-canvas-wrap">
-    <canvas id="fanCanvas"></canvas>
+</section>
+
+<section class="anexos-scroll" id="anexosScroll">
+  <div class="anexos-sticky">
+    <div class="anexos-track" id="anexosTrack">
+      <div class="anexos-slide"><img src="anexo-01.jpg" alt="Página 1 de la guía Piloto de Segunda"></div>
+      <div class="anexos-slide"><img src="anexo-02.jpg" alt="Página 2 de la guía Piloto de Segunda"></div>
+      <div class="anexos-slide"><img src="anexo-03.jpg" alt="Página 3 de la guía Piloto de Segunda"></div>
+      <div class="anexos-slide"><img src="anexo-04.jpg" alt="Página 4 de la guía Piloto de Segunda"></div>
+      <div class="anexos-slide"><img src="anexo-05.jpg" alt="Página 5 de la guía Piloto de Segunda"></div>
+      <div class="anexos-slide"><img src="anexo-06.jpg" alt="Página 6 de la guía Piloto de Segunda"></div>
+      <div class="anexos-slide"><img src="anexo-07.jpg" alt="Página 7 de la guía Piloto de Segunda"></div>
+      <div class="anexos-slide"><img src="anexo-08.jpg" alt="Página 8 de la guía Piloto de Segunda"></div>
+      <div class="anexos-slide"><img src="anexo-09.jpg" alt="Página 9 de la guía Piloto de Segunda"></div>
+    </div>
   </div>
-  <p class="mono-label fan-hint">Arrastra para girar ↔</p>
+  <p class="mono-label anexos-hint">Scroll para ver más ↓</p>
 </section>
 
 <!-- TESTIMONIALS -->
@@ -371,121 +384,26 @@
   });
 </script>
 
-<script type="importmap">
-{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
-</script>
-<script type="module">
-import * as THREE from 'three';
+<script>
+  // Galería "Un vistazo dentro": convierte el scroll vertical de esta
+  // sección en desplazamiento horizontal de la fila de fotos.
+  (function () {
+    const section = document.getElementById('anexosScroll');
+    const track = document.getElementById('anexosTrack');
+    if (!section || !track) return;
 
-const wrap = document.getElementById('fanCanvasWrap');
-const canvas = document.getElementById('fanCanvas');
-
-if (wrap && canvas) {
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(65, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
-  camera.position.set(0, 0, 6);
-
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-  const key = new THREE.DirectionalLight(0xffffff, 0.6);
-  key.position.set(2, 3, 5);
-  scene.add(key);
-
-  const group = new THREE.Group();
-  scene.add(group);
-
-  const imgCount = 9;
-  const cardW = 1.6, cardH = cardW * (1272 / 900);
-  const radius = 5.5;
-  const angleStep = 0.26;
-  const curve = 0.4;
-
-  function roundedTexture(url, radiusPx = 40) {
-    return new Promise(resolve => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        const c = document.createElement('canvas');
-        c.width = img.width; c.height = img.height;
-        const ctx = c.getContext('2d');
-        ctx.beginPath();
-        ctx.moveTo(radiusPx, 0);
-        ctx.arcTo(c.width, 0, c.width, c.height, radiusPx);
-        ctx.arcTo(c.width, c.height, 0, c.height, radiusPx);
-        ctx.arcTo(0, c.height, 0, 0, radiusPx);
-        ctx.arcTo(0, 0, c.width, 0, radiusPx);
-        ctx.closePath();
-        ctx.clip();
-        ctx.drawImage(img, 0, 0);
-        const tex = new THREE.CanvasTexture(c);
-        tex.colorSpace = THREE.SRGBColorSpace;
-        resolve(tex);
-      };
-      img.src = url;
-    });
-  }
-
-  function makeBentGeometry(w, h) {
-    const geo = new THREE.PlaneGeometry(w, h, 30, 1);
-    const pos = geo.attributes.position;
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const t = x / (w / 2);
-      pos.setZ(i, -Math.pow(t, 2) * curve);
+    function update() {
+      const rect = section.getBoundingClientRect();
+      const scrollDistance = section.offsetHeight - window.innerHeight;
+      const progress = Math.min(Math.max(-rect.top / scrollDistance, 0), 1);
+      const maxTranslate = track.scrollWidth - track.parentElement.clientWidth;
+      track.style.transform = `translateX(-${progress * maxTranslate}px)`;
     }
-    geo.computeVertexNormals();
-    return geo;
-  }
 
-  (async () => {
-    for (let i = 0; i < imgCount; i++) {
-      const num = String(i + 1).padStart(2, '0');
-      const tex = await roundedTexture(`anexo-${num}.jpg`);
-
-      const mesh = new THREE.Mesh(
-        makeBentGeometry(cardW, cardH),
-        new THREE.MeshStandardMaterial({ map: tex, side: THREE.DoubleSide, roughness: 0.9, metalness: 0 })
-      );
-
-      const angle = (i - (imgCount - 1) / 2) * angleStep;
-      mesh.position.x = Math.sin(angle) * radius;
-      mesh.position.z = Math.cos(angle) * radius - radius;
-      mesh.rotation.y = -angle;
-
-      group.add(mesh);
-    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
   })();
-
-  let targetRotY = 0, currentRotY = 0, isDragging = false, startX = 0, startRot = 0;
-
-  wrap.addEventListener('pointerdown', (e) => {
-    isDragging = true; startX = e.clientX; startRot = targetRotY;
-    wrap.setPointerCapture(e.pointerId);
-  });
-  wrap.addEventListener('pointermove', (e) => {
-    if (!isDragging) return;
-    targetRotY = startRot + (e.clientX - startX) * 0.006;
-  });
-  wrap.addEventListener('pointerup', () => { isDragging = false; });
-  wrap.addEventListener('pointerleave', () => { isDragging = false; });
-
-  function animate() {
-    requestAnimationFrame(animate);
-    currentRotY += (targetRotY - currentRotY) * 0.08;
-    group.rotation.y = currentRotY;
-    renderer.render(scene, camera);
-  }
-  animate();
-
-  window.addEventListener('resize', () => {
-    camera.aspect = wrap.clientWidth / wrap.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
-  });
-}
 </script>
 
 </body>
