@@ -228,32 +228,11 @@
       <p class="mono-label">Un vistazo dentro</p>
       <h2>Así es la guía, página a página.</h2>
     </div>
-    <div class="fan-carousel">
-      <div class="fan-track" id="fanTrack">
-        <div class="fan-page active">
-          <img src="anexo-01.jpg" alt="Página de la guía" class="fan-card" style="--r:-9deg">
-          <img src="anexo-02.jpg" alt="Página de la guía" class="fan-card" style="--r:-4.5deg">
-          <img src="anexo-03.jpg" alt="Página de la guía" class="fan-card" style="--r:0deg">
-          <img src="anexo-04.jpg" alt="Página de la guía" class="fan-card" style="--r:4.5deg">
-          <img src="anexo-05.jpg" alt="Página de la guía" class="fan-card" style="--r:9deg">
-        </div>
-        <div class="fan-page">
-          <img src="anexo-06.jpg" alt="Página de la guía" class="fan-card" style="--r:-7deg">
-          <img src="anexo-07.jpg" alt="Página de la guía" class="fan-card" style="--r:-2.3deg">
-          <img src="anexo-08.jpg" alt="Página de la guía" class="fan-card" style="--r:2.3deg">
-          <img src="anexo-09.jpg" alt="Página de la guía" class="fan-card" style="--r:7deg">
-        </div>
-      </div>
-      <div class="fan-nav">
-        <button class="fan-arrow" id="fanPrev" aria-label="Anterior">←</button>
-        <div class="fan-dots" id="fanDots">
-          <span class="fan-dot active"></span>
-          <span class="fan-dot"></span>
-        </div>
-        <button class="fan-arrow" id="fanNext" aria-label="Siguiente">→</button>
-      </div>
-    </div>
   </div>
+  <div id="fanCanvasWrap" class="fan-canvas-wrap">
+    <canvas id="fanCanvas"></canvas>
+  </div>
+  <p class="mono-label fan-hint">Arrastra para girar ↔</p>
 </section>
 
 <!-- TESTIMONIALS -->
@@ -392,23 +371,92 @@
   });
 </script>
 
-<script>
-  (function() {
-    const pages = document.querySelectorAll('#fanTrack .fan-page');
-    const dots = document.querySelectorAll('#fanDots .fan-dot');
-    const prev = document.getElementById('fanPrev');
-    const next = document.getElementById('fanNext');
-    let current = 0;
-    function update() {
-      pages.forEach((p, i) => p.classList.toggle('active', i === current));
-      dots.forEach((d, i) => d.classList.toggle('active', i === current));
-      prev.disabled = current === 0;
-      next.disabled = current === pages.length - 1;
+
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+const wrap = document.getElementById('fanCanvasWrap');
+const canvas = document.getElementById('fanCanvas');
+
+if (wrap && canvas) {
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
+  camera.position.set(0, 0, 9);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  const loader = new THREE.TextureLoader();
+  const imgCount = 9;
+  const cardW = 1.5, cardH = cardW * (1272 / 900);
+  const radius = 6.5;
+  const curve = 0.18; // cuanto se "doblan" las tarjetas — sube o baja este número para más o menos curva
+
+  function makeBentGeometry(w, h) {
+    const geo = new THREE.PlaneGeometry(w, h, 24, 1);
+    const pos = geo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const t = x / (w / 2);
+      pos.setZ(i, -Math.pow(t, 2) * curve);
     }
-    prev.addEventListener('click', () => { if (current > 0) { current--; update(); } });
-    next.addEventListener('click', () => { if (current < pages.length - 1) { current++; update(); } });
-    update();
-  })();
+    geo.computeVertexNormals();
+    return geo;
+  }
+
+  for (let i = 0; i < imgCount; i++) {
+    const num = String(i + 1).padStart(2, '0');
+    const tex = loader.load(`anexo-${num}.jpg`);
+    tex.colorSpace = THREE.SRGBColorSpace;
+
+    const mesh = new THREE.Mesh(
+      makeBentGeometry(cardW, cardH),
+      new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide })
+    );
+
+    const angle = (i - (imgCount - 1) / 2) * 0.34;
+    mesh.position.x = Math.sin(angle) * radius;
+    mesh.position.z = -Math.cos(angle) * radius + radius;
+    mesh.rotation.y = -angle;
+
+    group.add(mesh);
+  }
+
+  let targetRotY = 0, currentRotY = 0, isDragging = false, startX = 0, startRot = 0;
+
+  wrap.addEventListener('pointerdown', (e) => {
+    isDragging = true; startX = e.clientX; startRot = targetRotY;
+    wrap.setPointerCapture(e.pointerId);
+  });
+  wrap.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    targetRotY = startRot + (e.clientX - startX) * 0.005;
+  });
+  wrap.addEventListener('pointerup', () => { isDragging = false; });
+  wrap.addEventListener('pointerleave', () => { isDragging = false; });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    currentRotY += (targetRotY - currentRotY) * 0.08;
+    group.rotation.y = currentRotY;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = wrap.clientWidth / wrap.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  });
+}
 </script>
 
 </body>

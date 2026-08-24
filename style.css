@@ -837,46 +837,20 @@
   }
   .lock-box h2 { margin-top: 1.4rem; }
 
-  /* ---------- ANEXOS / ABANICO DE FOTOS ---------- */
-  .fan-carousel { margin-top: 1rem; }
-  .fan-track { position: relative; min-height: 340px; }
-  .fan-page {
-    position: absolute; inset: 0;
-    display: flex; justify-content: center; align-items: flex-end;
-    opacity: 0; visibility: hidden; transform: translateY(12px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    pointer-events: none;
+    /* ---------- ANEXOS / ABANICO 3D ---------- */
+  .fan-canvas-wrap {
+    width: 100%;
+    height: 460px;
+    margin-top: 1rem;
+    cursor: grab;
   }
-  .fan-page.active { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
-  .fan-card {
-    width: 150px;
-    aspect-ratio: 900 / 1272;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
-    transform: rotate(var(--r, 0deg));
-    margin-left: -22px;
-    transition: transform 0.35s ease;
-    border: 1px solid rgba(255,255,255,0.06);
+  .fan-canvas-wrap:active { cursor: grabbing; }
+  #fanCanvas { width: 100%; height: 100%; display: block; touch-action: none; }
+  .fan-hint {
+    text-align: center;
+    margin-top: 0.75rem;
+    opacity: 0.5;
   }
-  .fan-card:first-child { margin-left: 0; }
-  .fan-card:hover { transform: rotate(var(--r, 0deg)) translateY(-14px); z-index: 5; }
-  .fan-nav { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-top: 2.5rem; }
-  .fan-arrow {
-    width: 38px; height: 38px; border-radius: 50%;
-    border: 1px solid var(--border-blush); background: transparent;
-    color: var(--blush); font-size: 1rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s ease, color 0.2s ease;
-  }
-  .fan-arrow:hover { background: var(--blush); color: var(--deep); }
-  .fan-arrow:disabled { opacity: 0.3; cursor: default; }
-  .fan-arrow:disabled:hover { background: transparent; color: var(--blush); }
-  .fan-dots { display: flex; gap: 0.5rem; }
-  .fan-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-blush); transition: background 0.2s ease; }
-  .fan-dot.active { background: var(--blush); }
-
   @media (max-width: 640px) {
-    .fan-card { width: 92px; margin-left: -30px; }
-    .fan-track { min-height: 220px; }
+    .fan-canvas-wrap { height: 320px; }
   }
