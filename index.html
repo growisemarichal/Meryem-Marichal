@@ -17,8 +17,10 @@
   <div class="wrap">
     <a href="index.html" class="logo"><img src="marichal-logo.png" alt="Marichal" class="nav-logo-img"></a>
     <div class="nav-links">
-      <a href="quien-soy.html" class="nav-link">Quién soy</a>
+            <a href="quien-soy.html" class="nav-link">Quién soy</a>
       <a href="index.html#guia" class="nav-link">La guía</a>
+      <a href="index.html#guia" class="nav-link">Qué incluye</a>
+      <a href="index.html#testimonios" class="nav-link">Testimonios</a>
       <div class="nav-dropdown">
   <button class="nav-link nav-dropdown-btn">
     Contacto
@@ -87,8 +89,8 @@
       <div class="stat-divider"></div>
       <div class="stat"><b>10 caps.</b><span class="mono-label">Paso a paso</span></div>
       <div class="stat-divider"></div>
-      <div class="stat"><b>+350</b><span class="mono-label">Contactos de navieras</span></div>
-    </div>
+      <div class="stat"><b>+300</b><span class="mono-label">Contactos de navieras</span></div>
+        </div>
   </div>
   -->
     <div class="scroll-indicator">
@@ -207,8 +209,8 @@
     </div>
 
     <div class="bonus-strip">
-      <p><b>+ Directorio de más de 350 contactos</b> de navieras, agencias y cruceros para pedir tus prácticas.</p>
-      <span class="bonus-tag">Incluido en el pack</span>
+      <p><b>+ Directorio de más de 300 contactos</b> de navieras, agencias y cruceros para pedir tus prácticas.</p>
+            <span class="bonus-tag">Incluido en el pack</span>
     </div>
 
     <div class="modules-footer">
@@ -218,8 +220,44 @@
   </div>
 </section>
 
+<!-- ANEXOS -->
+<section class="section-alt">
+  <div class="top-line"></div>
+  <div class="wrap">
+    <div class="section-head" style="margin: 0 auto 1rem; text-align:center;">
+      <p class="mono-label">Un vistazo dentro</p>
+      <h2>Así es la guía, página a página.</h2>
+    </div>
+    <div class="fan-carousel">
+      <div class="fan-track" id="fanTrack">
+        <div class="fan-page active">
+          <img src="anexo-01.jpg" alt="Página de la guía" class="fan-card" style="--r:-9deg">
+          <img src="anexo-02.jpg" alt="Página de la guía" class="fan-card" style="--r:-4.5deg">
+          <img src="anexo-03.jpg" alt="Página de la guía" class="fan-card" style="--r:0deg">
+          <img src="anexo-04.jpg" alt="Página de la guía" class="fan-card" style="--r:4.5deg">
+          <img src="anexo-05.jpg" alt="Página de la guía" class="fan-card" style="--r:9deg">
+        </div>
+        <div class="fan-page">
+          <img src="anexo-06.jpg" alt="Página de la guía" class="fan-card" style="--r:-7deg">
+          <img src="anexo-07.jpg" alt="Página de la guía" class="fan-card" style="--r:-2.3deg">
+          <img src="anexo-08.jpg" alt="Página de la guía" class="fan-card" style="--r:2.3deg">
+          <img src="anexo-09.jpg" alt="Página de la guía" class="fan-card" style="--r:7deg">
+        </div>
+      </div>
+      <div class="fan-nav">
+        <button class="fan-arrow" id="fanPrev" aria-label="Anterior">←</button>
+        <div class="fan-dots" id="fanDots">
+          <span class="fan-dot active"></span>
+          <span class="fan-dot"></span>
+        </div>
+        <button class="fan-arrow" id="fanNext" aria-label="Siguiente">→</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- TESTIMONIALS -->
-<section>
+<section id="testimonios">
   <div class="top-line"></div>
   <div class="wrap">
     <div class="section-head" style="margin: 0 auto 1rem; text-align:center;">
@@ -261,21 +299,18 @@
   </div>
 </section>
 
-<!-- COMING SOON -->
+<!-- EN CONSTRUCCIÓN -->
 <section class="section-alt">
   <div class="wrap">
-    <div class="coming-box">
-      <span class="badge mono-label">◷ Próximamente</span>
-      <h2>Asesorías personalizadas</h2>
-      <p class="desc">En un futuro próximo abriré sesiones de asesoría individual para acompañarte en tu carrera en la marina mercante: orientación sobre embarcos, dudas del proceso, estrategia profesional y mucho más.</p>
-      <div class="coming-tags">
-        <span>⚓ Asesoría 1 a 1</span>
-        <span class="dot"></span>
-        <span>⚓ Orientación de carrera</span>
-        <span class="dot"></span>
-        <span>⚓ Revisión de documentación</span>
+    <div class="coming-box lock-box">
+      <div class="lock-icon-wrap">
+        <svg class="lock-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
       </div>
-      <p class="mono-label" style="margin-top:2rem; color:rgba(224,112,149,0.6);">Mientras tanto — la guía tiene todo lo que necesitas para empezar</p>
+      <h2>En construcción.</h2>
+      <p class="desc">Algo para acompañarte en el camino.</p>
     </div>
   </div>
 </section>
@@ -355,6 +390,25 @@
       }
     });
   });
+</script>
+
+<script>
+  (function() {
+    const pages = document.querySelectorAll('#fanTrack .fan-page');
+    const dots = document.querySelectorAll('#fanDots .fan-dot');
+    const prev = document.getElementById('fanPrev');
+    const next = document.getElementById('fanNext');
+    let current = 0;
+    function update() {
+      pages.forEach((p, i) => p.classList.toggle('active', i === current));
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+      prev.disabled = current === 0;
+      next.disabled = current === pages.length - 1;
+    }
+    prev.addEventListener('click', () => { if (current > 0) { current--; update(); } });
+    next.addEventListener('click', () => { if (current < pages.length - 1) { current++; update(); } });
+    update();
+  })();
 </script>
 
 </body>
