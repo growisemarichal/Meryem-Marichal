@@ -733,6 +733,25 @@
   .reveal { opacity: 1; transform: none; transition: none; }
 }
 
+/* ---------- TEXTO PALABRA A PALABRA CON DESENFOQUE ---------- */
+.split-words .word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(14px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.split-words.is-visible .word {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .split-words .word { opacity: 1; filter: none; transform: none; transition: none; }
+}
+
 /* ---------- IMAGEN STICKY (efecto "queda fija mientras lees") ---------- */
 @media (min-width: 901px) {
   .bio-img.sticky-img {
