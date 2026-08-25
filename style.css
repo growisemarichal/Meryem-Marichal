@@ -20,6 +20,7 @@
     line-height: 1.5;
     overflow-x: hidden;
   }
+  body.page-quien-soy { background: #000000; }
 
   h1, h2, h3 {
     font-family: 'Playfair Display', serif;
@@ -547,9 +548,14 @@
   object-fit: cover;
   filter: grayscale(1) contrast(1.05);
 }
+#quien-soy .bio-img {
+  aspect-ratio: 1/1;
+  border-radius: 0;
+}
 .scroll-hint {
   margin-top: 3.5rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 0.75rem;
   color: var(--mist);
@@ -624,6 +630,7 @@
 .philosophy-closing h3 {
   font-size: 1.5rem;
   font-weight: 700;
+  color: var(--blush);
   margin: 0.75rem 0 1rem;
 }
 
