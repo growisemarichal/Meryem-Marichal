@@ -85,29 +85,10 @@
     display: inline-flex;
     align-items: center;
 }
-  /* Cada letra del botón vive en su propia cajita (cta-letter) con dos
-     copias apiladas (cta-letter-flip). Al hacer hover, cada cajita sube
-     una línea — y como cada una tiene un retraso ligeramente distinto
-     (asignado por JS), el efecto es que el texto "ondea" letra a letra
-     en vez de moverse todo de golpe. */
-  .cta-letters { display: inline-flex; }
-  .cta-letter {
-    display: inline-block;
-    overflow: hidden;
-    height: 1em;
-  }
-  .cta-letter-flip {
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
-  }
-  .cta-letter-flip span {
-    display: block;
-    height: 1em;
-    line-height: 1em;
-  }
-  .nav-cta:hover .cta-letter-flip {
-    transform: translateY(-1em);
+  .nav-cta:hover {
+    background: transparent;
+    color: var(--blush);
+    letter-spacing: 0.14em;
   }
   .nav-links {
   position: absolute;
@@ -550,7 +531,7 @@
 }
 .bio-img {
   position: relative;
-  aspect-ratio: 17/20;
+  aspect-ratio: 5/4;
   overflow: hidden;
   border: 1px solid var(--border-blush);
   border-radius: 24px;
@@ -601,27 +582,28 @@
 .philosophy-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 1rem;
   margin-top: 3rem;
 }
 
 .philosophy-card {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 20px;
-  padding: 1.2rem;
+  border-radius: 24px;
+  padding: 1.5rem;
 }
 
 .philosophy-card h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--blush);
+  margin-bottom: 0.5rem;
 }
 
 .philosophy-card p {
-  font-size: 0.75rem;
-  line-height: 1.6;
-  opacity: 0.8;
+  font-size: 0.875rem;
+  line-height: 1.625;
+  opacity: 0.85;
 }
 
 .philosophy-closing {

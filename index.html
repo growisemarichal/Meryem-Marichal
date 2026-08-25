@@ -486,33 +486,6 @@
   })();
 </script>
 
-<script>
-  // Botón "Conseguir la guía": separa el texto en letras y a cada una
-  // le da un pequeño retraso distinto, para que al pasar el ratón
-  // el texto se mueva en cascada, letra a letra, en vez de todo junto.
-  document.querySelectorAll('.nav-cta').forEach(btn => {
-    const text = btn.textContent.trim();
-    btn.setAttribute('aria-label', text);
-    btn.innerHTML = '';
-    const wrap = document.createElement('span');
-    wrap.className = 'cta-letters';
-    wrap.setAttribute('aria-hidden', 'true');
-    [...text].forEach((ch, i) => {
-      const cell = document.createElement('span');
-      cell.className = 'cta-letter';
-      const flip = document.createElement('span');
-      flip.className = 'cta-letter-flip';
-      flip.style.transitionDelay = `${Math.min(i * 0.02, 0.3)}s`;
-      const a = document.createElement('span');
-      a.textContent = ch === ' ' ? '\u00A0' : ch;
-      const b = a.cloneNode(true);
-      flip.appendChild(a);
-      flip.appendChild(b);
-      cell.appendChild(flip);
-      wrap.appendChild(cell);
-    });
-    btn.appendChild(wrap);
-  });
-</script>
+
 </body>
 </html>
