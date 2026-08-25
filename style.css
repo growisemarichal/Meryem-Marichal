@@ -650,6 +650,28 @@
   min-height: 400px;
 }
 
+.photo-bg-wrap {
+  position: relative;
+  background-image: url('fondo-quien-soy.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+.photo-bg-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.78);
+  pointer-events: none;
+}
+.photo-bg-wrap > section {
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 900px) {
+  .photo-bg-wrap { background-attachment: scroll; }
+}
+
 .bio-grid-reverse .bio-content {
   order: 2;
 }
