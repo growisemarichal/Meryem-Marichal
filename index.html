@@ -414,31 +414,49 @@
 </script>
 
 <script>
-  // Galería "Un vistazo dentro": con las flechas, avanza una página cada vez.
+  // Galería "Un vistazo dentro": arrastra con el ratón o usa las flechas.
   (function () {
     const track = document.getElementById('anexosTrack');
+    const viewport = track ? track.parentElement : null;
     const prevBtn = document.getElementById('anexosPrev');
     const nextBtn = document.getElementById('anexosNext');
-    if (!track || !prevBtn || !nextBtn) return;
+    if (!track || !viewport || !prevBtn || !nextBtn) return;
 
-    const slides = Array.from(track.children);
-    let index = 0;
+    let isDown = false, startX, startScroll;
 
-    function update() {
-      const slideWidth = slides[0].getBoundingClientRect().width;
+    viewport.addEventListener('mousedown', (e) => {
+      isDown = true;
+      viewport.classList.add('dragging');
+      startX = e.pageX;
+      startScroll = viewport.scrollLeft;
+    });
+    window.addEventListener('mouseup', () => {
+      isDown = false;
+      viewport.classList.remove('dragging');
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      viewport.scrollLeft = startScroll - (e.pageX - startX);
+    });
+
+    function step() {
+      const slideWidth = track.children[0].getBoundingClientRect().width;
       const gap = parseFloat(getComputedStyle(track).gap) || 0;
-      const step = slideWidth + gap;
-      const maxIndex = slides.length - 1;
-      index = Math.min(Math.max(index, 0), maxIndex);
-      track.style.transform = `translateX(-${index * step}px)`;
-      prevBtn.disabled = index === 0;
-      nextBtn.disabled = index === maxIndex;
+      return slideWidth + gap;
     }
 
-    prevBtn.addEventListener('click', () => { index--; update(); });
-    nextBtn.addEventListener('click', () => { index++; update(); });
-    window.addEventListener('resize', update);
-    update();
+    function updateArrows() {
+      const maxScroll = track.scrollWidth - viewport.clientWidth;
+      prevBtn.disabled = viewport.scrollLeft <= 4;
+      nextBtn.disabled = viewport.scrollLeft >= maxScroll - 4;
+    }
+
+    prevBtn.addEventListener('click', () => viewport.scrollBy({ left: -step(), behavior: 'smooth' }));
+    nextBtn.addEventListener('click', () => viewport.scrollBy({ left: step(), behavior: 'smooth' }));
+    viewport.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+    updateArrows();
   })();
 </script>
 

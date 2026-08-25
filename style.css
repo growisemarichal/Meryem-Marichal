@@ -893,18 +893,23 @@
   }
   .anexos-viewport {
     flex: 1;
-    overflow: hidden;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    cursor: grab;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
+  .anexos-viewport::-webkit-scrollbar { display: none; }
+  .anexos-viewport.dragging { cursor: grabbing; scroll-behavior: auto; }
   .anexos-track {
     display: flex;
     gap: 3vw;
-    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
-    will-change: transform;
+    user-select: none;
   }
   .anexos-slide {
     flex: 0 0 auto;
-    width: min(58vw, 460px);
-    height: 70vh;
+    width: 220px;
+    height: 240px;
     border-radius: 14px;
     overflow: hidden;
     box-shadow: 0 30px 60px rgba(0,0,0,0.55);
