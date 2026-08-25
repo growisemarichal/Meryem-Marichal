@@ -82,6 +82,20 @@
     text-decoration: none;
     transition: all 0.3s ease;
     white-space: nowrap;
+    display: inline-block;
+    overflow: hidden;
+}
+  .nav-cta-flip {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .nav-cta-flip span {
+    display: block;
+    line-height: 1;
+  }
+  .nav-cta:hover .nav-cta-flip {
+    transform: translateY(-50%);
   }
   .nav-links {
   position: absolute;
@@ -499,13 +513,13 @@
 .bio-section { padding: 8rem 0; }
 .bio-grid {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 6.5fr 3.5fr;
   gap: 4rem;
   align-items: center;
 }
 .bio-content .eyebrow { margin-bottom: 1.5rem; }
 .bio-content h2 {
-  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  font-size: 1.6rem;
   font-weight: 600;
   line-height: 1.15;
   color: var(--foreground);
@@ -524,7 +538,7 @@
 }
 .bio-img {
   position: relative;
-  aspect-ratio: 3/4;
+  aspect-ratio: 17/20;
   overflow: hidden;
   border: 1px solid var(--border-blush);
   border-radius: 24px;
@@ -792,12 +806,13 @@
   margin: 0 auto 1.8rem;
   text-align: center;
 }
-.anexos-gallery-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.15rem, 2vw, 1.4rem);
-  font-weight: 600;
-  color: var(--foreground);
-  margin-top: 0.4rem;
+.anexos-hint-arrow {
+  display: inline-block;
+  animation: bounce-right 2s ease-in-out infinite;
+}
+@keyframes bounce-right {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
 }
 
 
