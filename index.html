@@ -264,33 +264,33 @@
       <h2>Lo que dicen quienes ya la tienen.</h2>
     </div>
     <div class="testi-grid">
-      <div class="testi-card">
-        <p class="quote-mark">“</p>
+      <div class="testi-card reveal">
+        <p class="testi-tag pulse">Alumno de puente</p>
         <p class="testi-text">Te lo juro q pensé q no iba a estar tan currado pero q locura. Está todo super bien. Te felicito de verdad. Espero q te hagas mucho más conocida porque te lo mereces.</p>
         <p class="testi-source">— Mensaje recibido por WhatsApp</p>
       </div>
-      <div class="testi-card">
-        <p class="quote-mark">“</p>
+      <div class="testi-card reveal reveal-delay-1">
+        <p class="testi-tag pulse">Alumno de puente</p>
         <p class="testi-text">Marian me encanta. Qué bonito dios. Un 10. Se nota que te lo curraste.</p>
         <p class="testi-source">— Mensaje recibido por Instagram</p>
       </div>
-      <div class="testi-card">
-        <p class="quote-mark">“</p>
+      <div class="testi-card reveal reveal-delay-2">
+        <p class="testi-tag pulse">Alumno de puente</p>
         <p class="testi-text">Una puta locura ese documento Mery... hacía falta que alguien hiciera algo así</p>
         <p class="testi-source">— Mensaje recibido por Instagram</p>
       </div>
-      <div class="testi-card">
-        <p class="quote-mark">“</p>
+      <div class="testi-card reveal">
+        <p class="testi-tag pulse">Alumno de puente</p>
         <p class="testi-text">Gracias por compartir todo esto, de verdad que eres una inspiración para muchos que estamos en la carrera 🤗🌸</p>
         <p class="testi-source">— Mensaje recibido por Instagram</p>
       </div>
-      <div class="testi-card">
-        <p class="quote-mark">“</p>
+      <div class="testi-card reveal reveal-delay-1">
+        <p class="testi-tag pulse">Alumno de puente</p>
         <p class="testi-text">Que éxito más bonito 💪💪 más mujeres como tú 😎</p>
         <p class="testi-source">— Mensaje recibido por Instagram</p>
       </div>
-      <div class="testi-card">
-        <p class="quote-mark">“</p>
+      <div class="testi-card reveal reveal-delay-2">
+        <p class="testi-tag pulse">Alumno de puente</p>
         <p class="testi-text">🫡 me encanta tú contenido y gracias por todas las pautas.</p>
         <p class="testi-source">— Mensaje recibido por Instagram</p>
       </div>
@@ -397,6 +397,19 @@
   document.addEventListener('click', () => {
     document.querySelectorAll('.nav-dropdown.open').forEach(el => el.classList.remove('open'));
   });
+</script>
+<script>
+  // Testimonios: aparecen en cascada al hacer scroll.
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  revealEls.forEach(el => revealObserver.observe(el));
 </script>
 <script>
   document.querySelectorAll('.faq-q').forEach(btn => {

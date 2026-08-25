@@ -795,6 +795,27 @@
   color: var(--blush);
   line-height: 1;
 }
+.testi-tag {
+  display: inline-block;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--blush);
+  border: 1px solid var(--border-blush);
+  padding: 0.35rem 0.75rem;
+  margin-bottom: 1rem;
+}
+.testi-tag.pulse {
+  animation: testi-pulse 2.4s ease-in-out infinite;
+}
+@keyframes testi-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+.testi-card:hover {
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
 .testi-card .testi-text {
   margin-top: 0.5rem;
   color: var(--foreground);
