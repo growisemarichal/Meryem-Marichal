@@ -15,20 +15,43 @@
 
 <nav>
   <div class="wrap">
-    <a href="index.html" class="logo">marich<span>aaa</span>ll</a>
+    <a href="index.html" class="logo"><img src="marichal-logo.png" alt="Marichal" class="nav-logo-img"></a>
     <div class="nav-links">
       <a href="quien-soy.html" class="nav-link">Quién soy</a>
       <a href="la-guia.html" class="nav-link">La guía</a>
       <div class="nav-dropdown">
-  <button class="nav-link nav-dropdown-btn">Contacto</button>
+  <button class="nav-link nav-dropdown-btn">
+    Contacto
+    <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
   <div class="nav-dropdown-menu">
     <a href="https://instagram.com/iiitsmery" target="_blank" class="nav-dropdown-item">
-      <span class="dropdown-handle">@iiitsmery</span>
-      <span class="dropdown-sub">Instagram</span>
+      <span class="dropdown-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/>
+        </svg>
+      </span>
+      <span class="dropdown-text">
+        <span class="dropdown-handle">@iiitsmery</span>
+        <span class="dropdown-sub">Instagram</span>
+      </span>
     </a>
     <a href="https://instagram.com/marichaaall" target="_blank" class="nav-dropdown-item">
-      <span class="dropdown-handle">@marichaaall</span>
-      <span class="dropdown-sub">Instagram</span>
+      <span class="dropdown-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/>
+        </svg>
+      </span>
+      <span class="dropdown-text">
+        <span class="dropdown-handle">@marichaaall</span>
+        <span class="dropdown-sub">Instagram</span>
+      </span>
     </a>
   </div>
 </div>
@@ -50,6 +73,7 @@
       <p>Soy Mery, Piloto de la Marina Mercante y la primera de mi familia en entrar en este sector. Nadie me explicó el camino — lo fui descubriendo a base de errores, un año perdido en burocracia, y aprender sobre la marcha lo que ninguna clase enseña. Hoy comparto lo que a mí me hubiera ahorrado ese año, para que tú no tengas que perderlo.</p>
       <div class="scroll-hint">
         <span class="mono-label">Scroll para seguir</span>
+        <span class="scroll-chevron">↓</span>
       </div>
     </div>
     <div class="bio-img sticky-img reveal reveal-delay-1">
@@ -155,8 +179,33 @@
   </div>
 </section>
 
-<footer>
-  <p>© 2026 marichaaall — Mery Elatmani Marichal · Piloto de la Marina Mercante</p>
+<footer class="site-footer">
+  <div class="top-line"></div>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo"><img src="marichal-logo.png" alt="Marichal" class="nav-logo-img"></a>
+      <p>El proceso completo para ser Piloto de Segunda de la Marina Mercante en España, explicado por alguien que ya lo vivió.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <a href="quien-soy.html">Quién soy</a>
+      <a href="index.html#guia">La guía</a>
+      <a href="index.html#testimonios">Testimonios</a>
+    </div>
+    <div class="footer-col">
+      <h4>Síguenos</h4>
+      <a href="https://instagram.com/marichaaall" target="_blank">@marichaaall</a>
+      <a href="https://instagram.com/iiitsmery" target="_blank">@iiitsmery</a>
+    </div>
+    <div class="footer-col footer-contact">
+      <h4>Contacto</h4>
+      <a href="mailto:meryemmarichalcollabs@gmail.com">meryemmarichalcollabs@gmail.com</a>
+      <a href="https://payhip.com/b/OFoZs" target="_blank">Conseguir la guía</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <p>© 2026 marichaaall — Mery Elatmani Marichal · Piloto de la Marina Mercante</p>
+  </div>
 </footer>
 
 <script>
@@ -182,6 +231,34 @@
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
   revealEls.forEach(el => revealObserver.observe(el));
+</script>
+<script>
+  // Botón "Conseguir la guía": separa el texto en letras y a cada una
+  // le da un pequeño retraso distinto, para que al pasar el ratón
+  // el texto se mueva en cascada, letra a letra, en vez de todo junto.
+  document.querySelectorAll('.nav-cta').forEach(btn => {
+    const text = btn.textContent.trim();
+    btn.setAttribute('aria-label', text);
+    btn.innerHTML = '';
+    const wrap = document.createElement('span');
+    wrap.className = 'cta-letters';
+    wrap.setAttribute('aria-hidden', 'true');
+    [...text].forEach((ch, i) => {
+      const cell = document.createElement('span');
+      cell.className = 'cta-letter';
+      const flip = document.createElement('span');
+      flip.className = 'cta-letter-flip';
+      flip.style.transitionDelay = `${Math.min(i * 0.02, 0.3)}s`;
+      const a = document.createElement('span');
+      a.textContent = ch === ' ' ? '\u00A0' : ch;
+      const b = a.cloneNode(true);
+      flip.appendChild(a);
+      flip.appendChild(b);
+      cell.appendChild(flip);
+      wrap.appendChild(cell);
+    });
+    btn.appendChild(wrap);
+  });
 </script>
 </body>
 </html>

@@ -85,19 +85,28 @@
     display: inline-flex;
     align-items: center;
 }
-  .nav-cta-flip {
+  /* Cada letra del botón vive en su propia cajita (cta-letter) con dos
+     copias apiladas (cta-letter-flip). Al hacer hover, cada cajita sube
+     una línea — y como cada una tiene un retraso ligeramente distinto
+     (asignado por JS), el efecto es que el texto "ondea" letra a letra
+     en vez de moverse todo de golpe. */
+  .cta-letters { display: inline-flex; }
+  .cta-letter {
+    display: inline-block;
+    overflow: hidden;
+    height: 1em;
+  }
+  .cta-letter-flip {
     display: flex;
     flex-direction: column;
-    height: 1em;
-    overflow: hidden;
-    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+    transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
   }
-  .nav-cta-flip span {
+  .cta-letter-flip span {
     display: block;
     height: 1em;
     line-height: 1em;
   }
-  .nav-cta:hover .nav-cta-flip {
+  .nav-cta:hover .cta-letter-flip {
     transform: translateY(-1em);
   }
   .nav-links {
