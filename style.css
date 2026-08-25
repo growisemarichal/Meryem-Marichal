@@ -747,6 +747,15 @@
 .pain-grid .reveal-left:nth-child(2) { transition-delay: 0.15s; }
 .pain-grid .reveal-left:nth-child(3) { transition-delay: 0.3s; }
 .pain-grid .reveal-left:nth-child(4) { transition-delay: 0.45s; }
+.pain-grid .reveal-left:nth-child(4) { transition-delay: 0.45s; }
+
+/* ---------- REVEAL DESDE LA DERECHA (galería de páginas de la guía) ---------- */
+.reveal-right {
+  transform: translateX(40px);
+}
+.reveal-right.is-visible {
+  transform: translateX(0);
+}
 
 /* ---------- REVEAL EN CASCADA (cajas "Un vistazo dentro") ---------- */
 .reveal-cascade {
@@ -771,6 +780,24 @@
 
 @media (prefers-reduced-motion: reduce) {
   .reveal-left, .reveal-cascade { opacity: 1; transform: none; filter: none; transition: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-left, .reveal-cascade { opacity: 1; transform: none; filter: none; transition: none; }
+  .reveal-right { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- TÍTULO PEQUEÑO ANTES DE LA GALERÍA DE PÁGINAS ---------- */
+.anexos-gallery-head {
+  max-width: 640px;
+  margin: 0 auto 1.8rem;
+  text-align: center;
+}
+.anexos-gallery-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-weight: 600;
+  color: var(--foreground);
+  margin-top: 0.4rem;
 }
 
 
