@@ -82,20 +82,23 @@
     text-decoration: none;
     transition: all 0.3s ease;
     white-space: nowrap;
-    display: inline-block;
-    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
 }
   .nav-cta-flip {
     display: flex;
     flex-direction: column;
+    height: 1em;
+    overflow: hidden;
     transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
   }
   .nav-cta-flip span {
     display: block;
-    line-height: 1;
+    height: 1em;
+    line-height: 1em;
   }
   .nav-cta:hover .nav-cta-flip {
-    transform: translateY(-50%);
+    transform: translateY(-1em);
   }
   .nav-links {
   position: absolute;
@@ -513,7 +516,7 @@
 .bio-section { padding: 8rem 0; }
 .bio-grid {
   display: grid;
-  grid-template-columns: 6.5fr 3.5fr;
+  grid-template-columns: 5.6fr 4.4fr;
   gap: 4rem;
   align-items: center;
 }
