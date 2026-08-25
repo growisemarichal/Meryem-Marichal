@@ -300,7 +300,9 @@
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--foreground);
+    transition: color 0.25s ease;
   }
+  .pain-card:hover h3 { color: var(--blush); }
   .pain-card p {
     margin-top: 0.7rem;
     font-size: 0.9rem;
@@ -451,7 +453,8 @@
     font-weight: 500;
   }
   .faq-q:hover { color: var(--blush); }
-  .faq-icon { color: var(--blush); font-size: 1.2rem; flex-shrink: 0; }
+  .faq-icon { color: var(--blush); font-size: 1.2rem; flex-shrink: 0; display: inline-block; transition: transform 0.3s ease; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
   .faq-a {
     max-height: 0;
     overflow: hidden;

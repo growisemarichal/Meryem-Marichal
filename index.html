@@ -18,7 +18,7 @@
     <a href="index.html" class="logo"><img src="marichal-logo.png" alt="Marichal" class="nav-logo-img"></a>
     <div class="nav-links">
       <a href="quien-soy.html" class="nav-link">Quién soy</a>
-      <a href="index.html#guia" class="nav-link">La guía</a>
+      
       <a href="index.html#guia" class="nav-link">Qué incluye</a>
       <a href="index.html#testimonios" class="nav-link">Testimonios</a>
       <div class="nav-dropdown">
@@ -146,7 +146,7 @@
   <div class="top-line"></div>
   <div class="wrap">
     <div class="section-head" style="margin: 0 auto 1rem; text-align:center;">
-      <p class="mono-label">La guía · Piloto de Segunda</p>
+      <p class="mono-label">Un vistazo dentro</p>
       <h2>47 páginas con todo lo que necesitas saber.</h2>
       <p>No es un resumen del BOE. Es el proceso completo explicado por alguien que lo vivió, con los errores incluidos, para que tú no cometas los mismos.</p>
     </div>
@@ -218,17 +218,9 @@
 </section>
 
 <!-- ANEXOS -->
-<section class="section-alt">
-  <div class="top-line"></div>
-  <div class="wrap">
-    <div class="section-head" style="margin: 0 auto 1rem; text-align:center;">
-      <p class="mono-label">Un vistazo dentro</p>
-      <h2>Así es la guía, página a página.</h2>
-    </div>
-  </div>
-</section>
 
 <section class="anexos-gallery" id="anexosGallery">
+<div class="top-line"></div>
   <div class="wrap anexos-gallery-wrap">
     <button class="anexos-arrow anexos-arrow-prev" id="anexosPrev" aria-label="Página anterior">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -308,7 +300,7 @@
     </div>
     <div class="faq-wrap" id="faq-wrap">
       <div class="faq-item open">
-        <button class="faq-q">¿Esto es un curso o una guía? <span class="faq-icon">−</span></button>
+        <button class="faq-q">¿Esto es un curso o una guía? <span class="faq-icon">+</span></button>
         <div class="faq-a"><p>Es una guía en formato PDF, no un curso. Son 47 páginas con el proceso completo para llegar a ser Piloto de Segunda de la Marina Mercante en España: documentación, embarco, libro de formación, prueba de idoneidad y solicitud del título. Todo referenciado en el BOE vigente.</p></div>
       </div>
       <div class="faq-item">
@@ -457,11 +449,9 @@
       const wasOpen = item.classList.contains('open');
       document.querySelectorAll('.faq-item').forEach(i => {
         i.classList.remove('open');
-        i.querySelector('.faq-icon').textContent = '+';
       });
       if (!wasOpen) {
         item.classList.add('open');
-        item.querySelector('.faq-icon').textContent = '−';
       }
     });
   });
