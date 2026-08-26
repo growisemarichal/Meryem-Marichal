@@ -731,14 +731,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(242, 237, 232, 0.05);
   color: var(--foreground);
   flex-shrink: 0;
-}
-.dropdown-icon svg {
-  width: 20px;
-  height: 20px;
 }
 .dropdown-text {
   display: flex;
@@ -1150,3 +1148,98 @@
   @media (max-width: 780px) {
     .footer-grid { grid-template-columns: 1fr 1fr; }
   }
+
+/* ---------- MENU MOVIL (hamburguesa) ---------- */
+.nav-hamburger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(20, 18, 24, 0.7);
+  border: 1px solid rgba(242, 237, 232, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  z-index: 101;
+  padding: 0;
+}
+.nav-hamburger span {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: var(--foreground);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--deep);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 2rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+.mobile-menu.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.mobile-menu-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+.mobile-menu-link {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--foreground);
+  text-decoration: none;
+  background: none;
+  border: none;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.mobile-menu-dropdown .nav-dropdown-menu {
+  position: static;
+  margin-top: 1rem;
+  width: 100%;
+  min-width: 0;
+}
+.mobile-menu-cta {
+  margin-top: 3rem;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--deep);
+  background: var(--blush);
+  border: 1px solid var(--blush);
+  border-radius: 999px;
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+  text-align: center;
+}
+body.menu-open { overflow: hidden; }
+
+@media (max-width: 780px) {
+  .nav-links, .nav-cta { display: none; }
+  .nav-hamburger { display: flex; }
+}

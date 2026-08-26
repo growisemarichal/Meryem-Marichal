@@ -70,8 +70,68 @@
 </div>
     </div>
     <a href="https://payhip.com/b/OFoZs" class="nav-cta">Conseguir la guía</a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-links">
+    <a href="quien-soy.html" class="mobile-menu-link">Quién soy</a>
+    <a href="index.html#guia" class="mobile-menu-link">Qué incluye</a>
+    <a href="index.html#testimonios" class="mobile-menu-link">Testimonios</a>
+    <div class="nav-dropdown mobile-menu-dropdown">
+      <button class="mobile-menu-link nav-dropdown-btn">
+        Contacto
+        <svg class="dropdown-chevron" width="12" height="7" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="nav-dropdown-menu">
+        <a href="https://instagram.com/iiitsmery" target="_blank" class="nav-dropdown-item">
+          <span class="dropdown-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="dropdown-text">
+            <span class="dropdown-handle">@iiitsmery</span>
+            <span class="dropdown-sub">Instagram</span>
+          </span>
+        </a>
+        <a href="https://instagram.com/marichaaall" target="_blank" class="nav-dropdown-item">
+          <span class="dropdown-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="dropdown-text">
+            <span class="dropdown-handle">@marichaaall</span>
+            <span class="dropdown-sub">Instagram</span>
+          </span>
+        </a>
+        <a href="mailto:meryemmarichalcollabs@gmail.com" class="nav-dropdown-item">
+          <span class="dropdown-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2.5" y="4.5" width="19" height="15" rx="2.4" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M3.5 6L12 13L20.5 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="dropdown-text">
+            <span class="dropdown-handle">Email</span>
+            <span class="dropdown-sub">meryemmarichalcollabs@gmail.com</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <a href="https://payhip.com/b/OFoZs" class="mobile-menu-cta">Conseguir la guía</a>
+</div>
 
 <!-- QUIEN SOY -->
 <section class="bio-section" id="quien-soy" style="padding-top: 10rem;">
@@ -267,6 +327,23 @@
     }
     lastScrollY = currentScrollY;
   }, { passive: true });
+
+  const navHamburger = document.getElementById('navHamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (navHamburger && mobileMenu) {
+    navHamburger.addEventListener('click', () => {
+      navHamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+    });
+    mobileMenu.querySelectorAll('a.mobile-menu-link, a.nav-dropdown-item').forEach(link => {
+      link.addEventListener('click', () => {
+        navHamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.classList.remove('menu-open');
+      });
+    });
+  }
 </script>
 </body>
 </script>
