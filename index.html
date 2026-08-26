@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="carousel3d.css">
 </head>
 <body>
 
@@ -298,30 +299,9 @@
       <p class="mono-label">Un vistazo dentro</p>
     </div>
   </div>
-  <div class="wrap anexos-gallery-wrap">
-    <button class="anexos-arrow anexos-arrow-prev" id="anexosPrev" aria-label="Página anterior">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <div class="anexos-viewport">
-      <div class="anexos-track" id="anexosTrack">
-        <div class="anexos-slide"><img src="anexo-01.png" alt="Página 1 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-02.png" alt="Página 2 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-03.png" alt="Página 3 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-04.png" alt="Página 4 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-05.png" alt="Página 5 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-06.png" alt="Página 6 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-07.png" alt="Página 7 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-08.png" alt="Página 8 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-09.png" alt="Página 9 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-10.png" alt="Página 10 de la guía Piloto de Segunda"></div>
-        <div class="anexos-slide"><img src="anexo-11.png" alt="Página 11 de la guía Piloto de Segunda"></div>
-      </div>
-    </div>
-    <button class="anexos-arrow anexos-arrow-next" id="anexosNext" aria-label="Página siguiente">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+  <div class="wrap">
+    <div id="carousel3d-root"></div>
   </div>
-  <p class="mono-label anexos-hint">Usa las flechas para ver más páginas <span class="anexos-hint-arrow">→</span></p>
 </section>
 
 <!-- TESTIMONIALS -->
@@ -514,52 +494,7 @@
   });
 </script>
 
-<script>
-  // Galería "Un vistazo dentro": arrastra con el ratón o usa las flechas.
-  (function () {
-    const track = document.getElementById('anexosTrack');
-    const viewport = track ? track.parentElement : null;
-    const prevBtn = document.getElementById('anexosPrev');
-    const nextBtn = document.getElementById('anexosNext');
-    if (!track || !viewport || !prevBtn || !nextBtn) return;
-
-    let isDown = false, startX, startScroll;
-
-    viewport.addEventListener('mousedown', (e) => {
-      isDown = true;
-      viewport.classList.add('dragging');
-      startX = e.pageX;
-      startScroll = viewport.scrollLeft;
-    });
-    window.addEventListener('mouseup', () => {
-      isDown = false;
-      viewport.classList.remove('dragging');
-    });
-    window.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      e.preventDefault();
-      viewport.scrollLeft = startScroll - (e.pageX - startX);
-    });
-
-    function step() {
-      const slideWidth = track.children[0].getBoundingClientRect().width;
-      const gap = parseFloat(getComputedStyle(track).gap) || 0;
-      return slideWidth + gap;
-    }
-
-    function updateArrows() {
-      const maxScroll = track.scrollWidth - viewport.clientWidth;
-      prevBtn.disabled = viewport.scrollLeft <= 4;
-      nextBtn.disabled = viewport.scrollLeft >= maxScroll - 4;
-    }
-
-    prevBtn.addEventListener('click', () => viewport.scrollBy({ left: -step(), behavior: 'smooth' }));
-    nextBtn.addEventListener('click', () => viewport.scrollBy({ left: step(), behavior: 'smooth' }));
-    viewport.addEventListener('scroll', updateArrows);
-    window.addEventListener('resize', updateArrows);
-    updateArrows();
-  })();
-</script>
+<script type="module" src="carousel3d.js"></script>
 
 <script>
   // "En construcción": la mancha de luz sigue al ratón dentro de la sección.
