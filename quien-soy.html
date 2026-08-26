@@ -311,23 +311,6 @@
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
     revealEls.forEach(el => revealObserver.observe(el));
 
-  // Barra de navegación: se esconde al bajar y reaparece al subir,
-  // igual que en atlasexpeditions.es. Cerca del todo arriba (menos
-  // de 80px) se queda siempre visible.
-  const navBar = document.querySelector('nav');
-  let lastScrollY = window.scrollY;
-  window.addEventListener('scroll', () => {
-    const currentScrollY = window.scrollY;
-    if (currentScrollY < 80) {
-      navBar.classList.remove('nav-hidden');
-    } else if (currentScrollY > lastScrollY) {
-      navBar.classList.add('nav-hidden'); // bajando → se esconde
-    } else {
-      navBar.classList.remove('nav-hidden'); // subiendo → aparece
-    }
-    lastScrollY = currentScrollY;
-  }, { passive: true });
-
   const navHamburger = document.getElementById('navHamburger');
   const mobileMenu = document.getElementById('mobileMenu');
   if (navHamburger && mobileMenu) {
@@ -345,8 +328,8 @@
     });
   }
 </script>
-</body>
-</script>
+
+<script src="animations.js"></script>
 
 </body>
 </html>
