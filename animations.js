@@ -132,6 +132,59 @@
     grid.parentElement.insertBefore(marquee, grid);
   })();
 
+  // ---------- TÍTULOS QUE APARECEN PALABRA A PALABRA ----------
+  // (no depende del ratón, así que va antes del "return" de abajo: también
+  // tiene que verse en móvil, no solo en ordenador)
+  (function wordRevealHeadings() {
+    if (reduceMotion) return;
+    const headings = document.querySelectorAll('.section-head h2, .final-cta h2');
+    if (!headings.length) return;
+
+    const splitIntoWords = (el) => {
+      const walk = (node) => {
+        Array.from(node.childNodes).forEach(child => {
+          if (child.nodeType === Node.TEXT_NODE) {
+            const frag = document.createDocumentFragment();
+            child.textContent.split(/(\s+)/).forEach(chunk => {
+              if (chunk.trim() === '') {
+                frag.appendChild(document.createTextNode(chunk));
+                return;
+              }
+              const mask = document.createElement('span');
+              mask.className = 'word-reveal-word';
+              const inner = document.createElement('span');
+              inner.textContent = chunk;
+              mask.appendChild(inner);
+              frag.appendChild(mask);
+            });
+            child.replaceWith(frag);
+          } else if (child.nodeType === Node.ELEMENT_NODE) {
+            walk(child);
+          }
+        });
+      };
+      walk(el);
+    };
+
+    headings.forEach(h => {
+      h.classList.add('word-reveal');
+      splitIntoWords(h);
+      h.querySelectorAll('.word-reveal-word > span').forEach((word, i) => {
+        word.style.transitionDelay = (i * 0.035) + 's';
+      });
+    });
+
+    const wordObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          wordObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4, rootMargin: '0px 0px -40px 0px' });
+    headings.forEach(h => wordObserver.observe(h));
+  })();
+
   if (reduceMotion || !hasFinePointer) return; // el resto son efectos de ratón/hover
 
   // ---------- BOTONES MAGNÉTICOS ----------
@@ -180,55 +233,5 @@
       spotlight.classList.add('active');
     });
     hero.addEventListener('mouseleave', () => spotlight.classList.remove('active'));
-  })();
-
-  // ---------- TÍTULOS QUE APARECEN PALABRA A PALABRA ----------
-  (function wordRevealHeadings() {
-    const headings = document.querySelectorAll('.section-head h2, .final-cta h2');
-    if (!headings.length) return;
-
-    const splitIntoWords = (el) => {
-      const walk = (node) => {
-        Array.from(node.childNodes).forEach(child => {
-          if (child.nodeType === Node.TEXT_NODE) {
-            const frag = document.createDocumentFragment();
-            child.textContent.split(/(\s+)/).forEach(chunk => {
-              if (chunk.trim() === '') {
-                frag.appendChild(document.createTextNode(chunk));
-                return;
-              }
-              const mask = document.createElement('span');
-              mask.className = 'word-reveal-word';
-              const inner = document.createElement('span');
-              inner.textContent = chunk;
-              mask.appendChild(inner);
-              frag.appendChild(mask);
-            });
-            child.replaceWith(frag);
-          } else if (child.nodeType === Node.ELEMENT_NODE) {
-            walk(child);
-          }
-        });
-      };
-      walk(el);
-    };
-
-    headings.forEach(h => {
-      h.classList.add('word-reveal');
-      splitIntoWords(h);
-      h.querySelectorAll('.word-reveal-word > span').forEach((word, i) => {
-        word.style.transitionDelay = (i * 0.035) + 's';
-      });
-    });
-
-    const wordObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          wordObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.4, rootMargin: '0px 0px -40px 0px' });
-    headings.forEach(h => wordObserver.observe(h));
   })();
 })();
