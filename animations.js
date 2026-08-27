@@ -66,6 +66,30 @@
     update();
   })();
 
+  // ---------- QUIÉN SOY: TEXTO Y FOTO CON MOVIMIENTO CINEMATOGRÁFICO ----------
+  (function bioCinematic() {
+    if (reduceMotion || window.innerWidth < 901) return;
+    const sections = document.querySelectorAll('.bio-section');
+    if (!sections.length) return;
+    const pairs = Array.from(sections)
+      .map(section => ({ section, content: section.querySelector('.bio-content'), img: section.querySelector('.bio-img') }))
+      .filter(p => p.content);
+
+    const update = () => {
+      const vh = window.innerHeight;
+      pairs.forEach(({ section, content, img }) => {
+        const rect = section.getBoundingClientRect();
+        const progress = (vh - rect.top) / (vh + rect.height); // 0 al entrar, 1 al salir
+        const drift = (progress - 0.5) * 50;
+        content.style.transform = `translateY(${drift}px)`;
+        if (img) img.style.transform = `translateY(${drift * -0.3}px)`;
+      });
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+
   // ---------- TESTIMONIOS EN CINTA (ticker con las citas reales) ----------
   (function testimonialsMarquee() {
     if (reduceMotion) return;

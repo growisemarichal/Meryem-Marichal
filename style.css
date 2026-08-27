@@ -13,6 +13,19 @@
 
   html { scroll-behavior: smooth; }
 
+  /* ---------- TRANSICIONES DE PÁGINA (fundido entre index/quien-soy/la-guia/contacto) ---------- */
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
   body {
     background: var(--deep);
     color: var(--foreground);
@@ -851,6 +864,16 @@
     top: 7rem;
     align-self: start;
   }
+  .bio-img.sticky-img img {
+    animation: bio-kenburns 18s ease-in-out infinite alternate;
+  }
+}
+@keyframes bio-kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bio-img.sticky-img img { animation: none; }
 }
 
 /* ---------- TEXTURA DE GRANO SOBRE LAS IMÃƒÂGENES ---------- */
@@ -942,31 +965,53 @@
   color: var(--mist);
 }
 
-  /* ---------- CANDADO / EN CONSTRUCCIÓN ---------- */
-  .lock-box { padding-top: 3rem; }
-  .lock-icon-wrap {
-    width: 56px; height: 56px; margin: 0 auto;
-    border: 1px solid var(--border-blush);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
+  /* ---------- LUZ / EN CONSTRUCCIÓN ---------- */
+  /* Alternativa ligera en CSS: solo se ve si el navegador no carga la
+     escena 3D (JS desactivado) o si el usuario prefiere menos movimiento. */
+  .coming-light-fallback {
+    display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .coming-light-fallback { display: flex; }
+  }
+  .coming-light-wrap {
     position: relative;
-    overflow: hidden;
+    width: 100%;
+    height: 220px;
+    align-items: flex-end;
+    justify-content: center;
   }
-  .lock-icon { width: 22px; height: 22px; color: var(--blush); position: relative; z-index: 1; }
-  .lock-icon-wrap::after {
-    content: '';
+  .coming-light {
+    position: relative;
+    z-index: 1;
+    width: 10px;
+    height: 160px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #ffffff 0%, var(--blush-glow) 65%, transparent 100%);
+    box-shadow:
+      0 0 24px 6px rgba(240, 160, 188, 0.85),
+      0 0 60px 20px rgba(224, 112, 149, 0.45),
+      0 0 130px 55px rgba(224, 112, 149, 0.22);
+    animation: coming-light-breathe 4s ease-in-out infinite;
+  }
+  .coming-light-ground {
     position: absolute;
-    top: 0; left: -60%;
-    width: 40%; height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(240,160,188,0.55), transparent);
-    transform: skewX(-20deg);
-    animation: lock-shine 3.2s ease-in-out infinite;
+    bottom: 6px;
+    left: 50%;
+    width: 280px;
+    height: 44px;
+    background: radial-gradient(ellipse, rgba(240, 160, 188, 0.5), transparent 72%);
+    transform: translateX(-50%);
+    filter: blur(3px);
   }
-  @keyframes lock-shine {
-    0% { left: -60%; }
-    45% { left: 130%; }
-    100% { left: 130%; }
+  @keyframes coming-light-breathe {
+    0%, 100% { opacity: 0.85; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.05); }
   }
+  @media (prefers-reduced-motion: reduce) {
+    .coming-light { animation: none; }
+  }
+  .coming-label { margin-top: 1.75rem; }
   .lock-box h2 { margin-top: 1.4rem; }
 
     /* ---------- ANEXOS / GALERÍA SCROLL HORIZONTAL ---------- */
@@ -1092,8 +1137,19 @@
     pointer-events: none;
     transition: left 0.3s ease, top 0.3s ease;
   }
+  .coming-light-scene {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .coming-light-scene canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
   .coming-cinematic-wrap { position: relative; z-index: 1; }
-  .coming-cinematic .lock-icon-wrap { margin-top: 1.5rem; }
+  .coming-cinematic .coming-light-wrap { margin-top: 1.5rem; }
   .coming-cinematic h2 {
     margin-top: 1.5rem;
     font-size: clamp(2.4rem, 5vw, 3.6rem);
