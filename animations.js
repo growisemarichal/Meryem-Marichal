@@ -146,53 +146,36 @@
       range = Math.max(1, rect.height - window.innerHeight);
     }
 
-    // La coreografía (cortina cierra → palabra → cortina abre → contenido
-    // se revela) es la MISMA curva exacta que usa la maqueta de
-    // referencia, sacada de su propio código: barras en
-    // [0,.42,.62,1] → [-52%,0%,0%,-52%], palabra en [.36,.5,.66] con
-    // pico en .5, contenido con opacidad [.6,.78]→[0,1] y zoom (si hay
-    // foto) [.6,1]→[1.35,1]. Ocupa el primer 72% del scroll de la
-    // sección; el 28% final es un cierre propio (no está en la
-    // referencia) que oscurece de verdad en vez de solo tapar con la
-    // cortina, para la transición hacia lo que viene después.
-    const REF_END = 0.72;
-
+    // Curvas EXACTAS del componente de referencia (CinemaCut · MAISON
+    // NOIR / Scroll Magic Pages), traducidas 1:1 de su código con
+    // motion/react useTransform sobre scrollYProgress (0→1):
+    //   cuchillas   [0, .42, .62, 1]  → [-52%, 0%, 0%, -52%]
+    //   palabra     opacidad [.36, .5, .66] → [0, 1, 0]
+    //               escala   [.36, .66]     → [0.82, 1.18]
+    //   escena      escala   [.6, 1]        → [1.35, 1]
+    //               opacidad [.6, .78]      → [0, 1]
     function render() {
       ticking = false;
       const p = clamp01((window.scrollY - top) / range);
-      const refT = clamp01(p / REF_END);
-      // el cierre a negro termina en p=0.92 (no en 1): así el último tramo
-      // de scroll ya está en negro y se enlaza directamente con "Acceder a
-      // la guía", sin hueco muerto entre las dos escenas.
-      const CLOSE_END = 0.87;
-      const closeT = clamp01((p - REF_END) / (CLOSE_END - REF_END));
 
-      const barTopRef = interp(refT, [0, 0.42, 0.62, 1], [-52, 0, 0, -52]);
-      const barTopPct = closeT === 0 ? barTopRef : interp(closeT, [0, 1], [-52, 0]);
-      barTop.style.transform = `translateY(${barTopPct}%)`;
-      barBottom.style.transform = `translateY(${-barTopPct}%)`;
-      // solo deja de tapar clics mientras está totalmente abierta
-      const barsOpen = Math.abs(barTopPct) > 40;
-      barTop.style.pointerEvents = barsOpen ? 'none' : 'auto';
-      barBottom.style.pointerEvents = barsOpen ? 'none' : 'auto';
+      const blade = interp(p, [0, 0.42, 0.62, 1], [-52, 0, 0, -52]);
+      barTop.style.transform = `translateY(${blade}%)`;
+      barBottom.style.transform = `translateY(${-blade}%)`;
+      // solo deja de tapar clics mientras están totalmente abiertas
+      const bladesOpen = Math.abs(blade) > 40;
+      barTop.style.pointerEvents = bladesOpen ? 'none' : 'auto';
+      barBottom.style.pointerEvents = bladesOpen ? 'none' : 'auto';
 
-      // la palabra aparece mientras está cerrado (pico en el medio)
-      const wordOpacity = interp(refT, [0.36, 0.5, 0.66], [0, 1, 0]);
-      wordWrap.style.opacity = String(wordOpacity);
-      const wordScale = interp(refT, [0.36, 0.66], [0.82, 1.18]);
-      wordWrap.style.transform = `scale(${wordScale})`;
+      // "slate flash": la palabra destella con las cuchillas cerradas
+      wordWrap.style.opacity = String(interp(p, [0.36, 0.5, 0.66], [0, 1, 0]));
+      wordWrap.style.transform = `scale(${interp(p, [0.36, 0.66], [0.82, 1.18])})`;
 
-      // el contenido se revela al reabrirse la cortina (justo antes del
-      // corte, para que no se quede mirando al vacío)
-      const contentOpacity = interp(refT, [0.64, 0.82], [0, 1]);
-      reveal.style.opacity = String(contentOpacity * (1 - closeT));
+      // la escena de detrás (foto + titular) se revela al abrirse
+      const sceneOpacity = interp(p, [0.6, 0.78], [0, 1]);
+      reveal.style.opacity = String(sceneOpacity);
       if (bg) {
-        const imgScale = interp(refT, [0.6, 1], [1.35, 1]);
-        bg.style.opacity = String(contentOpacity);
-        bg.style.transform = `scale(${imgScale})`;
-        // cierre propio: oscurece la foto de verdad (no solo opacidad)
-        // para un difuminado a negro más cinematográfico
-        bg.style.filter = closeT > 0 ? `brightness(${interp(closeT, [0, 1], [1, 0.04])})` : 'none';
+        bg.style.opacity = String(sceneOpacity);
+        bg.style.transform = `scale(${interp(p, [0.6, 1], [1.35, 1])})`;
       }
     }
 

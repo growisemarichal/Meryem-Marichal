@@ -1376,12 +1376,14 @@
     color: var(--mist);
   }
 
-  /* ---------- CTA FINAL: la sección se queda fija mientras una cortina
-     se cierra, aparece "Ya empezaste.", y se vuelve a abrir revelando
-     el mensaje y el botón. ---------- */
+  /* ---------- CTA FINAL: "cut" cinematográfico — réplica exacta del
+     componente CinemaCut de la referencia (MAISON NOIR / Scroll Magic
+     Pages). Dos cuchillas se cierran sobre la pantalla, destella la
+     palabra, y se abren revelando la escena de detrás. Sección fijada
+     (300vh) para que todo el "corte" ocurra como un solo plano. ---------- */
   .cut-pin {
     position: relative;
-    height: 138vh;
+    height: 300vh;
     background: var(--deep);
   }
   .cut-sticky {
@@ -1398,14 +1400,7 @@
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    transform: scale(1.15);
-  }
-  .cut-vignette {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: radial-gradient(ellipse at 50% 45%, transparent 30%, rgba(6, 4, 6, 0.55) 75%, rgba(6, 4, 6, 0.88) 100%);
-    pointer-events: none;
+    transform: scale(1.35);
   }
   .cut-reveal {
     position: absolute;
@@ -1417,8 +1412,16 @@
     justify-content: center;
     text-align: center;
     padding: 0 1.5rem;
-    background: rgba(10, 6, 9, 0.4);
+    background: rgba(20, 18, 20, 0.4);
     opacity: 0;
+  }
+  .cut-eyebrow {
+    font-family: 'Space Mono', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--blush);
+    margin-bottom: 1.5rem;
   }
   .cut-bar {
     position: absolute;
@@ -1447,28 +1450,32 @@
     font-family: 'Archivo', sans-serif;
     text-transform: uppercase;
     font-weight: 800;
-    letter-spacing: -0.02em;
-    font-size: clamp(2.2rem, 9vw, 5.5rem);
+    line-height: 0.84;
+    letter-spacing: -0.035em;
+    /* la referencia usa clamp(3rem,16vw,14rem) para "Cut." (4 letras);
+       "Ya empezaste." es más largo, así que se baja el ritmo para que
+       llene la pantalla igual sin salirse */
+    font-size: clamp(2.4rem, 12vw, 9.5rem);
     text-align: center;
     color: var(--blush);
-    animation: cut-word-flicker 2.6s steps(1) infinite;
+    animation: cut-rgb-split 6s infinite steps(1);
   }
-  .cut-word-b { font-size: clamp(1.7rem, 6.2vw, 3.6rem); }
-  #cutPinB .lead { color: var(--foreground); max-width: 560px; }
   .cut-reveal h2 {
     font-family: 'Archivo', sans-serif;
     text-transform: uppercase;
     font-weight: 800;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.035em;
     font-style: normal;
     color: var(--foreground);
-    font-size: clamp(2.6rem, 6.5vw, 5.2rem);
-    line-height: 1.05;
+    font-size: clamp(2.5rem, 8vw, 7rem);
+    line-height: 0.84;
     text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
   }
-  @keyframes cut-word-flicker {
-    0%, 92%, 96% { text-shadow: 1px 0 rgba(240,160,188,0.5), -1px 0 rgba(255,255,255,0.35); }
-    93%, 95% { text-shadow: 3px 0 rgba(240,160,188,0.7), -3px 0 rgba(255,255,255,0.5); }
+  /* réplica del rgb-split de la referencia */
+  @keyframes cut-rgb-split {
+    0%, 92%, 100% { text-shadow: none; }
+    93% { text-shadow: 0.05em 0 var(--blush), -0.05em 0 #2fbecb; }
+    96% { text-shadow: -0.06em 0 var(--blush), 0.04em 0 #2fbecb; }
   }
   @media (prefers-reduced-motion: reduce) {
     .cut-pin { height: auto; }
