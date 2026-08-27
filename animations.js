@@ -97,11 +97,12 @@
   (function cutSceneReveal() {
     const pin = document.getElementById('cutPin');
     const bg = document.getElementById('cutBg');
+    const bgTint = document.getElementById('cutBgTint');
     const reveal = document.getElementById('cutReveal');
     const barTop = document.getElementById('cutBarTop');
     const barBottom = document.getElementById('cutBarBottom');
     const wordWrap = document.getElementById('cutWordWrap');
-    if (!pin || !bg || !reveal || !barTop || !barBottom || !wordWrap) return;
+    if (!pin || !bg || !bgTint || !reveal || !barTop || !barBottom || !wordWrap) return;
     if (reduceMotion) return; // el CSS ya deja el mensaje visible sin animar
 
     const clamp01 = (n) => Math.min(1, Math.max(0, n));
@@ -146,6 +147,7 @@
       const revealOpacity = mapClamped(p, 0.4, 0.65, 0, 1);
       reveal.style.opacity = String(revealOpacity);
       bg.style.opacity = String(revealOpacity);
+      bgTint.style.opacity = String(revealOpacity);
       const bgScale = mapClamped(p, 0.4, 1, 1.15, 1);
       bg.style.transform = `scale(${bgScale})`;
     }
