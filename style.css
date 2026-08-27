@@ -1331,6 +1331,8 @@
     color: var(--blush);
     animation: cut-word-flicker 2.6s steps(1) infinite;
   }
+  .cut-word-b { font-size: clamp(1.7rem, 6.2vw, 3.6rem); }
+  #cutPinB .lead { color: var(--foreground); max-width: 560px; }
   .cut-reveal h2 {
     font-family: 'Archivo', sans-serif;
     text-transform: uppercase;

@@ -90,18 +90,18 @@
     update();
   })();
 
-  // ---------- CTA FINAL: cortina que se cierra, aparece "Ya empezaste.",
-  // y se abre revelando el mensaje y el botón. Sección fijada (sticky):
-  // el progreso 0→1 recorre el scroll extra de la sección. Más rápida
-  // y directa que la primera versión, para que se sienta dinámica. ----------
-  (function cutSceneReveal() {
-    const pin = document.getElementById('cutPin');
-    const bg = document.getElementById('cutBg');
-    const reveal = document.getElementById('cutReveal');
-    const barTop = document.getElementById('cutBarTop');
-    const barBottom = document.getElementById('cutBarBottom');
-    const wordWrap = document.getElementById('cutWordWrap');
-    if (!pin || !bg || !reveal || !barTop || !barBottom || !wordWrap) return;
+  // ---------- CTA FINAL (x2): cortina que se cierra, aparece una
+  // palabra, y se abre revelando el contenido. Sección fijada (sticky):
+  // el progreso 0→1 recorre el scroll extra de la sección. La misma
+  // coreografía se usa dos veces seguidas, con contenido distinto. ----------
+  function initCutScene(ids) {
+    const pin = document.getElementById(ids.pin);
+    const bg = ids.bg ? document.getElementById(ids.bg) : null;
+    const reveal = document.getElementById(ids.reveal);
+    const barTop = document.getElementById(ids.barTop);
+    const barBottom = document.getElementById(ids.barBottom);
+    const wordWrap = document.getElementById(ids.wordWrap);
+    if (!pin || !reveal || !barTop || !barBottom || !wordWrap) return;
     if (reduceMotion) return; // el CSS ya deja el mensaje visible sin animar
 
     const clamp01 = (n) => Math.min(1, Math.max(0, n));
@@ -129,15 +129,15 @@
       range = Math.max(1, rect.height - window.innerHeight);
     }
 
-    // La coreografía (cortina cierra → palabra → cortina abre → foto y
-    // mensaje se revelan) es la MISMA curva exacta que usa la maqueta
-    // de referencia, sacada de su propio código: barras en
+    // La coreografía (cortina cierra → palabra → cortina abre → contenido
+    // se revela) es la MISMA curva exacta que usa la maqueta de
+    // referencia, sacada de su propio código: barras en
     // [0,.42,.62,1] → [-52%,0%,0%,-52%], palabra en [.36,.5,.66] con
-    // pico en .5, foto con opacidad [.6,.78]→[0,1] y zoom [.6,1]→[1.35,1].
-    // Ocupa el primer 72% del scroll de la sección; el 28% final es
-    // un cierre propio (no está en la referencia) que oscurece la foto
-    // de verdad en vez de solo taparla con la cortina, para la
-    // transición hacia lo que viene después.
+    // pico en .5, contenido con opacidad [.6,.78]→[0,1] y zoom (si hay
+    // foto) [.6,1]→[1.35,1]. Ocupa el primer 72% del scroll de la
+    // sección; el 28% final es un cierre propio (no está en la
+    // referencia) que oscurece de verdad en vez de solo tapar con la
+    // cortina, para la transición hacia lo que viene después.
     const REF_END = 0.72;
 
     function render() {
@@ -155,21 +155,23 @@
       barTop.style.pointerEvents = barsOpen ? 'none' : 'auto';
       barBottom.style.pointerEvents = barsOpen ? 'none' : 'auto';
 
-      // "Ya empezaste." aparece mientras está cerrado (pico en el medio)
+      // la palabra aparece mientras está cerrado (pico en el medio)
       const wordOpacity = interp(refT, [0.36, 0.5, 0.66], [0, 1, 0]);
       wordWrap.style.opacity = String(wordOpacity);
       const wordScale = interp(refT, [0.36, 0.66], [0.82, 1.18]);
       wordWrap.style.transform = `scale(${wordScale})`;
 
-      // la foto y el mensaje se revelan al reabrirse la cortina
-      const imgOpacity = interp(refT, [0.6, 0.78], [0, 1]);
-      const imgScale = interp(refT, [0.6, 1], [1.35, 1]);
-      reveal.style.opacity = String(imgOpacity * (1 - closeT));
-      bg.style.opacity = String(imgOpacity);
-      bg.style.transform = `scale(${imgScale})`;
-      // cierre propio: oscurece la foto de verdad (no solo opacidad)
-      // para un difuminado a negro más cinematográfico
-      bg.style.filter = closeT > 0 ? `brightness(${interp(closeT, [0, 1], [1, 0.04])})` : 'none';
+      // el contenido se revela al reabrirse la cortina
+      const contentOpacity = interp(refT, [0.6, 0.78], [0, 1]);
+      reveal.style.opacity = String(contentOpacity * (1 - closeT));
+      if (bg) {
+        const imgScale = interp(refT, [0.6, 1], [1.35, 1]);
+        bg.style.opacity = String(contentOpacity);
+        bg.style.transform = `scale(${imgScale})`;
+        // cierre propio: oscurece la foto de verdad (no solo opacidad)
+        // para un difuminado a negro más cinematográfico
+        bg.style.filter = closeT > 0 ? `brightness(${interp(closeT, [0, 1], [1, 0.04])})` : 'none';
+      }
     }
 
     function onScroll() {
@@ -182,7 +184,16 @@
     render();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', () => { measure(); render(); });
-  })();
+  }
+
+  initCutScene({
+    pin: 'cutPin', bg: 'cutBg', reveal: 'cutReveal',
+    barTop: 'cutBarTop', barBottom: 'cutBarBottom', wordWrap: 'cutWordWrap'
+  });
+  initCutScene({
+    pin: 'cutPinB', reveal: 'cutRevealB',
+    barTop: 'cutBarTopB', barBottom: 'cutBarBottomB', wordWrap: 'cutWordWrapB'
+  });
 
   // ---------- GALERÍA "UN VISTAZO DENTRO": cinta continua, arrastrable,
   // con zoom al hacer clic y desplazamiento al acercar el ratón a los
@@ -445,7 +456,7 @@
   // tiene que verse en móvil, no solo en ordenador)
   (function wordRevealHeadings() {
     if (reduceMotion) return;
-    const headings = document.querySelectorAll('.section-head h2, .final-cta h2');
+    const headings = document.querySelectorAll('.section-head h2, .final-cta h2, .gancho-heading');
     if (!headings.length) return;
 
     const splitIntoWords = (el) => {
