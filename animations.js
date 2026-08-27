@@ -105,9 +105,18 @@
     if (reduceMotion) return; // el CSS ya deja el mensaje visible sin animar
 
     const clamp01 = (n) => Math.min(1, Math.max(0, n));
-    const mapClamped = (p, inMin, inMax, outMin, outMax) => {
-      const t = clamp01((p - inMin) / (inMax - inMin));
-      return outMin + (outMax - outMin) * t;
+    // interpola sobre varios puntos de control, como framer-motion useTransform
+    const interp = (t, inputs, outputs) => {
+      t = clamp01(t);
+      if (t <= inputs[0]) return outputs[0];
+      if (t >= inputs[inputs.length - 1]) return outputs[outputs.length - 1];
+      for (let i = 0; i < inputs.length - 1; i++) {
+        if (t >= inputs[i] && t <= inputs[i + 1]) {
+          const local = (t - inputs[i]) / (inputs[i + 1] - inputs[i] || 1);
+          return outputs[i] + (outputs[i + 1] - outputs[i]) * local;
+        }
+      }
+      return outputs[outputs.length - 1];
     };
 
     let range = 0;
@@ -120,45 +129,47 @@
       range = Math.max(1, rect.height - window.innerHeight);
     }
 
+    // La coreografía (cortina cierra → palabra → cortina abre → foto y
+    // mensaje se revelan) es la MISMA curva exacta que usa la maqueta
+    // de referencia, sacada de su propio código: barras en
+    // [0,.42,.62,1] → [-52%,0%,0%,-52%], palabra en [.36,.5,.66] con
+    // pico en .5, foto con opacidad [.6,.78]→[0,1] y zoom [.6,1]→[1.35,1].
+    // Ocupa el primer 72% del scroll de la sección; el 28% final es
+    // un cierre propio (no está en la referencia) que oscurece la foto
+    // de verdad en vez de solo taparla con la cortina, para la
+    // transición hacia lo que viene después.
+    const REF_END = 0.72;
+
     function render() {
       ticking = false;
       const p = clamp01((window.scrollY - top) / range);
+      const refT = clamp01(p / REF_END);
+      const closeT = clamp01((p - REF_END) / (1 - REF_END));
 
-      // cortina: se cierra (0 → 0.3), se abre (0.4 → 0.65), se mantiene
-      // abierta, y se vuelve a cerrar al final (0.82 → 1) con un
-      // difuminado a negro antes de soltar la sección.
-      let barPct;
-      if (p < 0.35) {
-        barPct = mapClamped(p, 0, 0.3, 52, 0);
-      } else if (p < 0.82) {
-        barPct = -mapClamped(p, 0.4, 0.65, 0, 60);
-      } else {
-        barPct = -mapClamped(p, 0.82, 1, 60, 0);
-      }
-      barTop.style.transform = `translateY(${barPct}%)`;
-      barBottom.style.transform = `translateY(${-barPct}%)`;
+      const barTopRef = interp(refT, [0, 0.42, 0.62, 1], [-52, 0, 0, -52]);
+      const barTopPct = closeT === 0 ? barTopRef : interp(closeT, [0, 1], [-52, 0]);
+      barTop.style.transform = `translateY(${barTopPct}%)`;
+      barBottom.style.transform = `translateY(${-barTopPct}%)`;
       // solo deja de tapar clics mientras está totalmente abierta
-      const open = p > 0.65 && p < 0.82;
-      barTop.style.pointerEvents = open ? 'none' : 'auto';
-      barBottom.style.pointerEvents = open ? 'none' : 'auto';
+      const barsOpen = Math.abs(barTopPct) > 40;
+      barTop.style.pointerEvents = barsOpen ? 'none' : 'auto';
+      barBottom.style.pointerEvents = barsOpen ? 'none' : 'auto';
 
-      // "Ya empezaste." aparece mientras está cerrado, y se va rápido
-      const wordIn = mapClamped(p, 0.1, 0.28, 0, 1);
-      const wordOut = 1 - mapClamped(p, 0.32, 0.42, 0, 1);
-      const wordOpacity = Math.min(wordIn, wordOut);
+      // "Ya empezaste." aparece mientras está cerrado (pico en el medio)
+      const wordOpacity = interp(refT, [0.36, 0.5, 0.66], [0, 1, 0]);
       wordWrap.style.opacity = String(wordOpacity);
-      const wordScale = mapClamped(p, 0, 0.42, 0.8, 1.08);
+      const wordScale = interp(refT, [0.36, 0.66], [0.82, 1.18]);
       wordWrap.style.transform = `scale(${wordScale})`;
 
-      // la foto de fondo y el mensaje final se revelan al reabrirse,
-      // y se difuminan a negro otra vez antes de que la cortina cierre
-      const revealIn = mapClamped(p, 0.4, 0.65, 0, 1);
-      const revealOut = 1 - mapClamped(p, 0.82, 1, 0, 1);
-      const revealOpacity = Math.min(revealIn, revealOut);
-      reveal.style.opacity = String(revealOpacity);
-      bg.style.opacity = String(revealOpacity);
-      const bgScale = mapClamped(p, 0.4, 1, 1.15, 1);
-      bg.style.transform = `scale(${bgScale})`;
+      // la foto y el mensaje se revelan al reabrirse la cortina
+      const imgOpacity = interp(refT, [0.6, 0.78], [0, 1]);
+      const imgScale = interp(refT, [0.6, 1], [1.35, 1]);
+      reveal.style.opacity = String(imgOpacity * (1 - closeT));
+      bg.style.opacity = String(imgOpacity);
+      bg.style.transform = `scale(${imgScale})`;
+      // cierre propio: oscurece la foto de verdad (no solo opacidad)
+      // para un difuminado a negro más cinematográfico
+      bg.style.filter = closeT > 0 ? `brightness(${interp(closeT, [0, 1], [1, 0.04])})` : 'none';
     }
 
     function onScroll() {
@@ -238,30 +249,33 @@
       });
     });
 
-    // ---- acercar el ratón al borde izquierdo/derecho: se desplaza sola ----
+    // ---- el ratón "conduce" la cinta: a la izquierda se mueve hacia la
+    // izquierda, a la derecha hacia la derecha, en el centro se para.
+    // No hace falta arrastrar, solo mover el ratón por encima. ----
     if (!reduceMotion) {
-      const EDGE = 90; // px desde el borde donde ya empieza a moverse
-      const MAX_SPEED = 11;
-      let edgeSpeed = 0;
+      const MAX_SPEED = 13;
+      const DEAD_ZONE = 0.08; // franja central sin movimiento, para poder mirar tranquila
+      let steerSpeed = 0;
       let hovering = false;
       viewport.addEventListener('mouseenter', () => { hovering = true; });
-      viewport.addEventListener('mouseleave', () => { hovering = false; edgeSpeed = 0; });
+      viewport.addEventListener('mouseleave', () => { hovering = false; steerSpeed = 0; });
       viewport.addEventListener('mousemove', (e) => {
-        if (isDown) { edgeSpeed = 0; return; }
+        if (isDown) { steerSpeed = 0; return; }
         const rect = viewport.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        if (x < EDGE) {
-          edgeSpeed = -MAX_SPEED * (1 - x / EDGE);
-        } else if (x > rect.width - EDGE) {
-          edgeSpeed = MAX_SPEED * (1 - (rect.width - x) / EDGE);
+        // -1 (borde izquierdo) → 0 (centro) → 1 (borde derecho)
+        let norm = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        if (Math.abs(norm) < DEAD_ZONE) {
+          steerSpeed = 0;
         } else {
-          edgeSpeed = 0;
+          const sign = norm < 0 ? -1 : 1;
+          const t = (Math.abs(norm) - DEAD_ZONE) / (1 - DEAD_ZONE);
+          steerSpeed = sign * MAX_SPEED * t * t; // suave al principio, rápido en los bordes
         }
       });
-      (function edgeScrollLoop() {
-        requestAnimationFrame(edgeScrollLoop);
-        if (hovering && edgeSpeed !== 0 && !isDown) {
-          viewport.scrollLeft += edgeSpeed;
+      (function steerLoop() {
+        requestAnimationFrame(steerLoop);
+        if (hovering && steerSpeed !== 0 && !isDown) {
+          viewport.scrollLeft += steerSpeed;
         }
       })();
     }
