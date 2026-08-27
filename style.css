@@ -525,8 +525,19 @@
   }
 
   /* ---------- FINAL CTA ---------- */
-  .final-cta { text-align: center; }
-  .final-cta .wrap { max-width: 680px; }
+  .final-cta { position: relative; text-align: center; overflow: hidden; }
+  .final-cta .wrap { position: relative; z-index: 1; max-width: 680px; }
+  .cta-constellation {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-constellation { display: none; }
+  }
   .final-cta h2 {
     margin-top: 0.75rem;
     font-size: clamp(2.2rem, 4.4vw, 3.3rem);

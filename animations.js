@@ -107,6 +107,69 @@
     observer.observe(root);
   })();
 
+  // ---------- CTA FINAL: puntos conectados tipo constelación de fondo ----------
+  (function ctaConstellation() {
+    const canvas = document.getElementById('ctaConstellation');
+    if (!canvas || reduceMotion) return;
+    const ctx = canvas.getContext('2d');
+    const section = canvas.closest('.final-cta');
+    let width, height, dpr;
+    let points = [];
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = section.clientWidth;
+      height = section.clientHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.max(18, Math.round((width * height) / 26000));
+      points = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.12,
+        vy: (Math.random() - 0.5) * 0.12
+      }));
+    }
+
+    const LINK_DIST = 140;
+    function tick() {
+      ctx.clearRect(0, 0, width, height);
+      points.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+      });
+      for (let i = 0; i < points.length; i++) {
+        for (let j = i + 1; j < points.length; j++) {
+          const dx = points[i].x - points[j].x;
+          const dy = points[i].y - points[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < LINK_DIST) {
+            ctx.strokeStyle = `rgba(224, 112, 149, ${0.22 * (1 - dist / LINK_DIST)})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(points[i].x, points[i].y);
+            ctx.lineTo(points[j].x, points[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      points.forEach(p => {
+        ctx.fillStyle = 'rgba(240, 160, 188, 0.6)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(tick);
+    }
+
+    resize();
+    tick();
+    window.addEventListener('resize', resize);
+  })();
+
   // ---------- TESTIMONIOS EN CINTA (ticker con las citas reales) ----------
   (function testimonialsMarquee() {
     if (reduceMotion) return;
