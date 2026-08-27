@@ -197,26 +197,12 @@
 
   // ---------- GALERÍA "UN VISTAZO DENTRO": cinta continua, arrastrable,
   // con zoom al hacer clic y desplazamiento al acercar el ratón a los
-  // bordes. Entrada con rebote al llegar scrolleando. ----------
+  // bordes. Entrada GRANDE: cada foto llega por separado, en cascada,
+  // no todo el bloque de golpe. ----------
   (function anexosCinta() {
     const viewport = document.getElementById('anexosCinta');
     const track = document.getElementById('anexosCintaTrack');
     if (!viewport || !track) return;
-
-    viewport.classList.add('carousel3d-reveal');
-    if (reduceMotion) {
-      viewport.classList.add('is-visible');
-    } else {
-      const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.2, rootMargin: '0px 0px -80px 0px' });
-      revealObserver.observe(viewport);
-    }
 
     const TOTAL = 11;
     const images = Array.from({ length: TOTAL }, (_, i) => `anexo-${String(i + 1).padStart(2, '0')}.png`);
@@ -224,6 +210,7 @@
     loopImages.forEach((src, i) => {
       const slide = document.createElement('div');
       slide.className = 'anexos-cinta-slide';
+      slide.style.transitionDelay = ((i % TOTAL) * 0.07) + 's';
       const img = document.createElement('img');
       img.src = src;
       img.alt = '';
@@ -235,6 +222,20 @@
       });
       track.appendChild(slide);
     });
+
+    if (reduceMotion) {
+      viewport.classList.add('is-visible');
+    } else {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+      revealObserver.observe(viewport);
+    }
 
     if (reduceMotion) track.style.animation = 'none';
 

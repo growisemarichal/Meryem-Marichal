@@ -914,12 +914,16 @@
 /* ---------- TÍTULO PEQUEÑO ANTES DE LA GALERÍA DE PÁGINAS ---------- */
 .anexos-gallery-head {
   max-width: 640px;
-  margin: 0 auto 0.85rem;
+  margin: 0 auto 1.5rem;
   text-align: center;
 }
-.anexos-gallery-head .mono-label {
-  font-size: 1rem;
-  letter-spacing: 0.14em;
+.anexos-gallery-head h2 {
+  font-family: 'Archivo', sans-serif;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  color: var(--foreground);
 }
 .anexos-hint-arrow {
   display: inline-block;
@@ -1123,6 +1127,17 @@
     overflow: hidden;
     box-shadow: 0 20px 45px rgba(0,0,0,0.5);
     cursor: pointer;
+    opacity: 0;
+    transform: translateY(90px) scale(0.75) rotate(-3deg);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .anexos-cinta-viewport.is-visible .anexos-cinta-slide {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .anexos-cinta-slide { opacity: 1; transform: none; transition: none; }
   }
   .anexos-cinta-slide img {
     width: 100%;
