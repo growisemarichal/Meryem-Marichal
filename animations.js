@@ -190,10 +190,6 @@
     pin: 'cutPin', bg: 'cutBg', reveal: 'cutReveal',
     barTop: 'cutBarTop', barBottom: 'cutBarBottom', wordWrap: 'cutWordWrap'
   });
-  initCutScene({
-    pin: 'cutPinB', reveal: 'cutRevealB',
-    barTop: 'cutBarTopB', barBottom: 'cutBarBottomB', wordWrap: 'cutWordWrapB'
-  });
 
   // ---------- GALERÍA "UN VISTAZO DENTRO": cinta continua, arrastrable,
   // con zoom al hacer clic y desplazamiento al acercar el ratón a los
