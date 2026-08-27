@@ -90,6 +90,23 @@
     update();
   })();
 
+  // ---------- CARRUSEL 3D: entrada con rebote al llegar scrolleando ----------
+  (function carousel3dReveal() {
+    const root = document.getElementById('carousel3d-root');
+    if (!root) return;
+    root.classList.add('carousel3d-reveal');
+    if (reduceMotion) { root.classList.add('is-visible'); return; }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2, rootMargin: '0px 0px -80px 0px' });
+    observer.observe(root);
+  })();
+
   // ---------- TESTIMONIOS EN CINTA (ticker con las citas reales) ----------
   (function testimonialsMarquee() {
     if (reduceMotion) return;
