@@ -247,7 +247,7 @@
     viewport.addEventListener('pointermove', (e) => {
       if (!isDown) return;
       const dx = e.clientX - startX;
-      if (Math.abs(dx) > 3) dragged = true;
+      if (Math.abs(dx) > 8) dragged = true;
       viewport.scrollLeft = scrollStart - dx;
     });
     ['pointerup', 'pointerleave'].forEach(ev => {
