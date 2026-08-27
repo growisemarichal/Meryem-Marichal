@@ -224,7 +224,7 @@
     gap: 0.75rem;
     margin-bottom: 1.5rem;
   }
-  .eyebrow-line { width: 32px; height: 1px; background: var(--blush); }
+  .eyebrow-line { display: none; }
   .hero h1 {
     font-size: clamp(2.4rem, 5.5vw, 4.2rem);
     font-weight: 600;
@@ -779,13 +779,6 @@
 }
 
 /* ---------- QUIÉN SOY: micro-animaciones al hacer scroll ---------- */
-/* la rayita del "eyebrow" se dibuja sola al entrar la sección */
-.page-quien-soy .eyebrow-line {
-  width: 0;
-  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
-}
-.page-quien-soy .reveal.is-visible .eyebrow-line { width: 32px; }
-
 /* las fotos se revelan con un barrido de abajo a arriba + zoom lento */
 .page-quien-soy .bio-img.reveal {
   transform: none;
@@ -813,7 +806,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .page-quien-soy .bio-img.reveal { clip-path: none; }
-  .page-quien-soy .eyebrow-line { width: 32px; transition: none; }
 }
 .nav-dropdown {
   position: relative;
