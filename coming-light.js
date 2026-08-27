@@ -153,12 +153,12 @@ import * as THREE from 'https://unpkg.com/three@0.161.0/build/three.module.js';
   // bien). Es una escena pequeña, el coste de dejarla siempre activa es mínimo.
   let t = 0;
   function animate() {
-    t += 0.008;
-    const breathe = 1 + Math.sin(t * 1.3) * 0.03;
+    t += 0.02;
+    const breathe = 1 + Math.sin(t * 1.3) * 0.15;
     panel.scale.set(breathe, breathe, 1);
     halo.scale.set(7 * breathe, 7 * breathe, 1);
-    pointLight.intensity = 16 + Math.sin(t * 1.3) * 3;
-    camera.position.x = Math.sin(t * 0.15) * 0.5;
+    pointLight.intensity = 16 + Math.sin(t * 1.3) * 8;
+    camera.position.x = Math.sin(t * 0.35) * 1.4;
     camera.lookAt(0, 2, -6);
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
