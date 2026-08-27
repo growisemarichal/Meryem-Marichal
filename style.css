@@ -528,11 +528,12 @@
   .final-cta { text-align: center; }
   .final-cta .wrap { max-width: 680px; }
   .final-cta h2 {
-    margin-top: 1.2rem;
-    font-size: clamp(2rem, 4vw, 3rem);
+    margin-top: 0.75rem;
+    font-size: clamp(2.2rem, 4.4vw, 3.3rem);
     font-weight: 600;
     line-height: 1.15;
   }
+  .cta-accent { color: var(--blush); font-style: italic; }
   .final-cta p.lead {
     margin-top: 1.5rem;
     color: var(--mist);
