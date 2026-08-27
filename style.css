@@ -1290,17 +1290,6 @@
     opacity: 0;
     transform: scale(1.15);
   }
-  /* Velo rosado sobre la foto: mix-blend-mode "color" tiñe la imagen
-     de rosa conservando su luz y sombra, para que quede como un
-     "color grade" de cine, no como un filtro plano encima. */
-  .cut-bg-tint {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(160deg, rgba(240, 160, 188, 0.95) 0%, rgba(180, 50, 95, 0.9) 45%, rgba(30, 8, 18, 0.95) 100%);
-    mix-blend-mode: color;
-    opacity: 0;
-  }
   .cut-vignette {
     position: absolute;
     inset: 0;
@@ -1374,7 +1363,7 @@
     .cut-sticky { position: relative; height: auto; padding: 6rem 0; }
     .cut-bar, .cut-word-wrap { display: none; }
     .cut-reveal { position: relative; opacity: 1; }
-    .cut-bg, .cut-bg-tint { opacity: 1; transform: none; }
+    .cut-bg { opacity: 1; transform: none; }
   }
 
   /* ---------- FOOTER (columnas, estilo Atlas Expeditions) ---------- */
