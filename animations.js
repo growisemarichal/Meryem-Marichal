@@ -90,6 +90,72 @@
     update();
   })();
 
+  // ---------- CIERRE CINEMATOGRÁFICO: cortina que se cierra, aparece
+  // "Casi.", y se abre revelando la escena y el mensaje final. Sección
+  // fijada (sticky) de 300vh: el progreso 0→1 recorre esos 200vh extra. ----------
+  (function cutSceneReveal() {
+    const pin = document.getElementById('cutPin');
+    const scene = document.getElementById('comingLightScene');
+    const reveal = document.getElementById('cutReveal');
+    const barTop = document.getElementById('cutBarTop');
+    const barBottom = document.getElementById('cutBarBottom');
+    const wordWrap = document.getElementById('cutWordWrap');
+    if (!pin || !scene || !reveal || !barTop || !barBottom || !wordWrap) return;
+    if (reduceMotion) return; // el CSS ya deja la escena y el texto visibles sin animar
+
+    const clamp01 = (n) => Math.min(1, Math.max(0, n));
+    const mapClamped = (p, inMin, inMax, outMin, outMax) => {
+      const t = clamp01((p - inMin) / (inMax - inMin));
+      return outMin + (outMax - outMin) * t;
+    };
+
+    let range = 0;
+    let top = 0;
+    let ticking = false;
+
+    function measure() {
+      const rect = pin.getBoundingClientRect();
+      top = rect.top + window.scrollY;
+      range = Math.max(1, rect.height - window.innerHeight);
+    }
+
+    function render() {
+      ticking = false;
+      const p = clamp01((window.scrollY - top) / range);
+
+      // cortina cerrándose (0 → 0.4) y volviendo a abrirse (0.55 → 0.85)
+      const closeAmt = mapClamped(p, 0, 0.4, 52, 0);
+      const openAmt = mapClamped(p, 0.55, 0.85, 0, 60);
+      const barPct = p < 0.475 ? closeAmt : -openAmt;
+      barTop.style.transform = `translateY(${barPct}%)`;
+      barBottom.style.transform = `translateY(${-barPct}%)`;
+
+      // la palabra "Casi." aparece mientras está cerrado, y se va
+      const wordIn = mapClamped(p, 0.18, 0.4, 0, 1);
+      const wordOut = 1 - mapClamped(p, 0.5, 0.62, 0, 1);
+      const wordOpacity = Math.min(wordIn, wordOut);
+      wordWrap.style.opacity = String(wordOpacity);
+      const wordScale = mapClamped(p, 0, 0.62, 0.82, 1.06);
+      wordWrap.style.transform = `scale(${wordScale})`;
+
+      // la escena 3D y el mensaje final se revelan al reabrirse
+      const revealOpacity = mapClamped(p, 0.58, 0.85, 0, 1);
+      scene.style.opacity = String(revealOpacity);
+      reveal.style.opacity = String(revealOpacity);
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(render);
+    }
+
+    measure();
+    render();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => { measure(); render(); });
+  })();
+
   // ---------- CARRUSEL 3D: entrada con rebote al llegar scrolleando ----------
   (function carousel3dReveal() {
     const root = document.getElementById('carousel3d-root');
