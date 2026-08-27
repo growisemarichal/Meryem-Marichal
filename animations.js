@@ -107,67 +107,95 @@
     observer.observe(root);
   })();
 
-  // ---------- CTA FINAL: puntos conectados tipo constelación de fondo ----------
-  (function ctaConstellation() {
-    const canvas = document.getElementById('ctaConstellation');
+  // ---------- CONSTELACIÓN DE FONDO: puntos que se iluminan y se conectan
+  // cerca del ratón. Cubre toda la página (igual que en la referencia),
+  // casi invisible salvo donde pasa el cursor. ----------
+  (function constellationBackground() {
+    const canvas = document.getElementById('siteConstellation');
     if (!canvas || reduceMotion) return;
     const ctx = canvas.getContext('2d');
-    const section = canvas.closest('.final-cta');
-    let width, height, dpr;
+    let width = 0, height = 0, dpr = 1;
+    const mouse = { x: -9999, y: -9999 };
     let points = [];
+    let rafId = 0;
 
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = section.clientWidth;
-      height = section.clientHeight;
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.max(18, Math.round((width * height) / 26000));
-      points = Array.from({ length: count }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.12,
-        vy: (Math.random() - 0.5) * 0.12
-      }));
+      const count = Math.round(Math.min(120, (width * height) / 14000));
+      points = Array.from({ length: count }, () => {
+        const r = Math.random() * 1.6 + 0.5;
+        return {
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          r,
+          base: r
+        };
+      });
     }
 
-    const LINK_DIST = 140;
     function tick() {
       ctx.clearRect(0, 0, width, height);
-      points.forEach(p => {
+      for (const p of points) {
         p.x += p.vx;
         p.y += p.vy;
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
-      });
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 170) {
+          const push = (1 - dist / 170) * 1.9;
+          p.x += (dx / (dist || 1)) * push;
+          p.y += (dy / (dist || 1)) * push;
+          p.r = p.base + push * 1.6;
+        } else {
+          p.r += (p.base - p.r) * 0.08;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = dist < 220 ? 'rgba(247,178,190,0.85)' : 'rgba(232,222,222,0.30)';
+        ctx.fill();
+      }
+
       for (let i = 0; i < points.length; i++) {
+        const a = points[i];
+        if (!a || Math.hypot(a.x - mouse.x, a.y - mouse.y) > 230) continue;
         for (let j = i + 1; j < points.length; j++) {
-          const dx = points[i].x - points[j].x;
-          const dy = points[i].y - points[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < LINK_DIST) {
-            ctx.strokeStyle = `rgba(224, 112, 149, ${0.22 * (1 - dist / LINK_DIST)})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(points[i].x, points[i].y);
-            ctx.lineTo(points[j].x, points[j].y);
-            ctx.stroke();
-          }
+          const b = points[j];
+          if (!b) continue;
+          const d = Math.hypot(a.x - b.x, a.y - b.y);
+          if (d > 130) continue;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(247,178,190,${(1 - d / 130) * 0.28})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
         }
       }
-      points.forEach(p => {
-        ctx.fillStyle = 'rgba(240, 160, 188, 0.6)';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      requestAnimationFrame(tick);
+
+      rafId = requestAnimationFrame(tick);
     }
+
+    function onMove(e) { mouse.x = e.clientX; mouse.y = e.clientY; }
+    function onLeave() { mouse.x = -9999; mouse.y = -9999; }
 
     resize();
     tick();
     window.addEventListener('resize', resize);
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerleave', onLeave);
   })();
 
   // ---------- TESTIMONIOS EN CINTA (ticker con las citas reales) ----------
