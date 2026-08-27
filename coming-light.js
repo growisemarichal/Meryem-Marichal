@@ -21,6 +21,22 @@ import * as THREE from 'https://unpkg.com/three@0.161.0/build/three.module.js';
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(DEEP, 0.05);
 
+  // ---------- cielo con degradado ----------
+  function skyTexture() {
+    const c = document.createElement('canvas');
+    c.width = 2; c.height = 512;
+    const ctx = c.getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 0, 512);
+    grad.addColorStop(0, '#0c0c0c');
+    grad.addColorStop(0.45, '#181018');
+    grad.addColorStop(0.72, '#3a2430');
+    grad.addColorStop(1, '#0c0c0c');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 2, 512);
+    return new THREE.CanvasTexture(c);
+  }
+  scene.background = skyTexture();
+
   const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
   camera.position.set(0, 2.1, 10);
   camera.lookAt(0, 2, -6);
@@ -146,20 +162,44 @@ import * as THREE from 'https://unpkg.com/three@0.161.0/build/three.module.js';
   panel.position.set(0, 0, -5.3);
   scene.add(panel);
 
+  // ---------- partículas de polvo flotando ----------
+  const particleCount = 70;
+  const particlePositions = new Float32Array(particleCount * 3);
+  for (let i = 0; i < particleCount; i++) {
+    particlePositions[i * 3] = (Math.random() - 0.5) * 7;
+    particlePositions[i * 3 + 1] = Math.random() * 5.5;
+    particlePositions[i * 3 + 2] = -5.3 + (Math.random() - 0.5) * 5;
+  }
+  const particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+  const particles = new THREE.Points(particleGeo, new THREE.PointsMaterial({
+    color: BLUSH_GLOW, size: 0.05, transparent: true, opacity: 0.55,
+    blending: THREE.AdditiveBlending, depthWrite: false, fog: true
+  }));
+  scene.add(particles);
+
   // ---------- animación ----------
   // Se renderiza siempre, sin pausarla al salir de pantalla: intentarlo
   // causaba que la escena se quedara en blanco en casos reales (la sección
   // se pausaba antes de que el usuario llegara a verla y no se despertaba
   // bien). Es una escena pequeña, el coste de dejarla siempre activa es mínimo.
   let t = 0;
+  const particlePos = particles.geometry.attributes.position;
   function animate() {
-    t += 0.02;
-    const breathe = 1 + Math.sin(t * 1.3) * 0.15;
+    t += 0.008;
+    const breathe = 1 + Math.sin(t * 1.3) * 0.03;
     panel.scale.set(breathe, breathe, 1);
     halo.scale.set(7 * breathe, 7 * breathe, 1);
-    pointLight.intensity = 16 + Math.sin(t * 1.3) * 8;
-    camera.position.x = Math.sin(t * 0.35) * 1.4;
+    pointLight.intensity = 16 + Math.sin(t * 1.3) * 3;
+    camera.position.x = Math.sin(t * 0.15) * 0.5;
     camera.lookAt(0, 2, -6);
+
+    for (let i = 0; i < particleCount; i++) {
+      const y = particlePos.getY(i) + 0.006;
+      particlePos.setY(i, y > 5.5 ? 0 : y);
+    }
+    particlePos.needsUpdate = true;
+
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
