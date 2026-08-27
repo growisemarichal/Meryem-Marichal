@@ -1174,9 +1174,8 @@
   .coming-light-scene {
     position: relative;
     width: 100%;
-    max-width: 700px;
-    height: 320px;
-    margin: 0 auto 0.5rem;
+    height: 380px;
+    margin: 0 0 0.5rem;
     z-index: 0;
     pointer-events: none;
   }
@@ -1186,7 +1185,7 @@
     height: 100%;
   }
   @media (max-width: 640px) {
-    .coming-light-scene { height: 220px; }
+    .coming-light-scene { height: 240px; }
   }
   .coming-cinematic-wrap { position: relative; z-index: 1; }
   .coming-cinematic .coming-light-wrap { margin-top: 1.5rem; }
