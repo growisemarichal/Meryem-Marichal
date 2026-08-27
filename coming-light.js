@@ -147,16 +147,12 @@ import * as THREE from 'https://unpkg.com/three@0.161.0/build/three.module.js';
   scene.add(panel);
 
   // ---------- animación ----------
-  // Los materiales con luz (MeshStandardMaterial) tardan unos fotogramas en
-  // compilar su shader la primera vez; hasta que no se ha dibujado ese primer
-  // fotograma "de verdad" no dejamos que el aviso de "fuera de pantalla" pare
-  // el bucle, o si no se quedaría en blanco.
+  // Se renderiza siempre, sin pausarla al salir de pantalla: intentarlo
+  // causaba que la escena se quedara en blanco en casos reales (la sección
+  // se pausaba antes de que el usuario llegara a verla y no se despertaba
+  // bien). Es una escena pequeña, el coste de dejarla siempre activa es mínimo.
   let t = 0;
-  let running = true;
-  let warmupFrames = 0;
   function animate() {
-    if (!running) return;
-    if (warmupFrames < 12) warmupFrames++;
     t += 0.008;
     const breathe = 1 + Math.sin(t * 1.3) * 0.03;
     panel.scale.set(breathe, breathe, 1);
@@ -168,15 +164,6 @@ import * as THREE from 'https://unpkg.com/three@0.161.0/build/three.module.js';
     requestAnimationFrame(animate);
   }
   animate();
-
-  // ---------- pausa cuando la sección no está en pantalla (ahorra batería) ----------
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting && !running) { running = true; animate(); }
-      if (!entry.isIntersecting && warmupFrames >= 12) running = false;
-    });
-  }, { threshold: 0.01 });
-  observer.observe(container);
 
   window.addEventListener('resize', () => {
     width = container.clientWidth;
