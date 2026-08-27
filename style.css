@@ -1200,12 +1200,79 @@
     .anexos-arrow { width: 40px; height: 40px; }
   }
 
-  /* ---------- CIERRE CINEMATOGRÁFICO: la sección se queda fija mientras
-     una cortina se cierra, aparece una palabra, y se vuelve a abrir
-     revelando la escena y el mensaje final. ---------- */
+  /* ---------- EN CONSTRUCCIÓN (cinematográfico, al fondo de la página) ---------- */
+  .coming-cinematic {
+    position: relative;
+    padding: 4rem 0 6rem;
+    background: var(--deep-2);
+    overflow: hidden;
+    text-align: center;
+  }
+  .coming-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 560px; height: 560px;
+    background: radial-gradient(circle, rgba(224,112,149,0.16), transparent 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: left 0.3s ease, top 0.3s ease;
+  }
+  /* Bloque normal (no absoluto): así el dibujo ocupa su propio espacio y
+     el texto de debajo nunca se le puede montar encima. */
+  .coming-light-scene {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    margin: 0 0 0.5rem;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .coming-light-scene canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  @media (max-width: 640px) {
+    .coming-light-scene { height: 240px; }
+  }
+  /* Texto encima de la escena, arriba del todo para no tapar la luz */
+  .coming-text-overlay {
+    position: absolute;
+    top: 1.75rem;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    text-align: center;
+    padding: 0 1.5rem;
+    pointer-events: none;
+  }
+  .coming-text-overlay .coming-label { margin: 0; }
+  .coming-subtitle {
+    margin-top: 0.5rem;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+    font-weight: 500;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    line-height: 1.35;
+    color: var(--foreground);
+  }
+  @media (max-width: 640px) {
+    .coming-text-overlay { top: 0.9rem; padding: 0 1rem; }
+    .coming-subtitle { margin-top: 0.35rem; font-size: 0.8rem; letter-spacing: 0.05em; line-height: 1.3; }
+  }
+  .coming-cinematic p.desc {
+    margin-top: 1rem;
+    color: var(--mist);
+  }
+
+  /* ---------- CTA FINAL: la sección se queda fija mientras una cortina
+     se cierra, aparece "Ya empezaste.", y se vuelve a abrir revelando
+     el mensaje y el botón. ---------- */
   .cut-pin {
     position: relative;
-    height: 300vh;
+    height: 220vh;
     background: var(--deep);
   }
   .cut-sticky {
@@ -1213,18 +1280,6 @@
     top: 0;
     height: 100vh;
     overflow: hidden;
-  }
-  .coming-light-scene {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0;
-  }
-  .coming-light-scene canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
   }
   .cut-reveal {
     position: absolute;
@@ -1234,21 +1289,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
     text-align: center;
     padding: 0 1.5rem;
-    pointer-events: none;
     opacity: 0;
-  }
-  .cut-reveal .coming-label { margin: 0; }
-  .coming-subtitle {
-    margin-top: 0.5rem;
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.9rem, 4.4vw, 3.2rem);
-    font-weight: 600;
-    font-style: italic;
-    line-height: 1.25;
-    color: var(--foreground);
   }
   .cut-bar {
     position: absolute;
@@ -1271,12 +1314,14 @@
     justify-content: center;
     pointer-events: none;
     opacity: 0;
+    padding: 0 1rem;
   }
   .cut-word {
     font-family: 'Playfair Display', serif;
     font-style: italic;
     font-weight: 600;
-    font-size: clamp(3rem, 16vw, 8rem);
+    font-size: clamp(2.4rem, 10vw, 6rem);
+    text-align: center;
     color: var(--blush);
     animation: cut-word-flicker 2.6s steps(1) infinite;
   }
@@ -1284,14 +1329,11 @@
     0%, 92%, 96% { text-shadow: 1px 0 rgba(240,160,188,0.5), -1px 0 rgba(255,255,255,0.35); }
     93%, 95% { text-shadow: 3px 0 rgba(240,160,188,0.7), -3px 0 rgba(255,255,255,0.5); }
   }
-  @media (max-width: 640px) {
-    .coming-subtitle { font-size: clamp(1.35rem, 5.5vw, 1.9rem); }
-  }
   @media (prefers-reduced-motion: reduce) {
     .cut-pin { height: auto; }
-    .cut-sticky { position: relative; height: 64vh; min-height: 420px; }
+    .cut-sticky { position: relative; height: auto; padding: 6rem 0; }
     .cut-bar, .cut-word-wrap { display: none; }
-    .coming-light-scene, .cut-reveal { opacity: 1; }
+    .cut-reveal { position: relative; opacity: 1; }
   }
 
   /* ---------- FOOTER (columnas, estilo Atlas Expeditions) ---------- */

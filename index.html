@@ -384,34 +384,36 @@
   </div>
 </section>
 
-<!-- FINAL CTA -->
-<section class="final-cta section-alt">
-  <div class="top-line"></div>
-  <div class="wrap">
-    <p class="mono-label cta-label">Empieza ahora · 04</p>
-    <h2>Ya empezaste. Ahora tu única opción es <span class="cta-accent">avanzar.</span></h2>
-    <p class="lead">Consigue la guía que a mí me hubiera ahorrado un año. El proceso completo, la documentación, los errores que no cometerás, y lo que no está en el BOE pero tienes que saber.</p>
-    <a href="https://payhip.com/b/OFoZs" class="btn-bracket">Conseguir la guía en PDF</a>
-    <p class="mono-label fine">Acceso inmediato · Formato PDF</p>
-  </div>
-</section>
-
-<!-- EN CONSTRUCCIÓN: transición cinematográfica tipo "cortina" -->
-<section class="cut-pin" id="cutPin">
+<!-- FINAL CTA: transición cinematográfica tipo "cortina" -->
+<section class="cut-pin final-cta" id="cutPin">
   <div class="cut-sticky">
-    <div class="coming-light-scene" id="comingLightScene">
-      <div class="coming-light-wrap coming-light-fallback">
-        <div class="coming-light"></div>
-        <div class="coming-light-ground"></div>
-      </div>
-    </div>
     <div class="cut-reveal" id="cutReveal">
-      <p class="mono-label coming-label">Próximamente</p>
-      <h2 class="coming-subtitle">Algo para acompañarte en el camino.</h2>
+      <div class="wrap">
+        <p class="mono-label cta-label">Empieza ahora · 04</p>
+        <h2>Ahora tu única opción es <span class="cta-accent">avanzar.</span></h2>
+        <p class="lead">Consigue la guía que a mí me hubiera ahorrado un año. El proceso completo, la documentación, los errores que no cometerás, y lo que no está en el BOE pero tienes que saber.</p>
+        <a href="https://payhip.com/b/OFoZs" class="btn-bracket">Conseguir la guía en PDF</a>
+        <p class="mono-label fine">Acceso inmediato · Formato PDF</p>
+      </div>
     </div>
     <div class="cut-bar cut-bar-top" id="cutBarTop"><div class="cut-bar-line"></div></div>
     <div class="cut-bar cut-bar-bottom" id="cutBarBottom"><div class="cut-bar-line"></div></div>
-    <div class="cut-word-wrap" id="cutWordWrap"><span class="cut-word">Casi.</span></div>
+    <div class="cut-word-wrap" id="cutWordWrap"><span class="cut-word">Ya empezaste.</span></div>
+  </div>
+</section>
+
+<!-- EN CONSTRUCCIÓN -->
+<section class="coming-cinematic" id="comingSoon">
+  <div class="coming-glow" id="comingGlow"></div>
+  <div class="coming-light-scene" id="comingLightScene">
+    <div class="coming-light-wrap coming-light-fallback">
+      <div class="coming-light"></div>
+      <div class="coming-light-ground"></div>
+    </div>
+    <div class="coming-text-overlay">
+      <p class="mono-label coming-label">Próximamente</p>
+      <h2 class="coming-subtitle">Algo para acompañarte en el camino.</h2>
+    </div>
   </div>
 </section>
 
@@ -503,6 +505,21 @@
 </script>
 
 <script type="module" src="carousel3d.js"></script>
+
+<script>
+  // "En construcción": la mancha de luz sigue al ratón dentro de la sección.
+  (function () {
+    const section = document.getElementById('comingSoon');
+    const glow = document.getElementById('comingGlow');
+    if (!section || !glow) return;
+
+    section.addEventListener('mousemove', (e) => {
+      const rect = section.getBoundingClientRect();
+      glow.style.left = (e.clientX - rect.left) + 'px';
+      glow.style.top = (e.clientY - rect.top) + 'px';
+    });
+  })();
+</script>
 
 <script type="module" src="coming-light.js"></script>
 
