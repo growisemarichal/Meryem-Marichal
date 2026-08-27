@@ -124,15 +124,23 @@
       ticking = false;
       const p = clamp01((window.scrollY - top) / range);
 
-      // cortina cerrándose (0 → 0.3) y volviendo a abrirse (0.4 → 0.65)
-      const closeAmt = mapClamped(p, 0, 0.3, 52, 0);
-      const openAmt = mapClamped(p, 0.4, 0.65, 0, 60);
-      const barPct = p < 0.35 ? closeAmt : -openAmt;
+      // cortina: se cierra (0 → 0.3), se abre (0.4 → 0.65), se mantiene
+      // abierta, y se vuelve a cerrar al final (0.82 → 1) con un
+      // difuminado a negro antes de soltar la sección.
+      let barPct;
+      if (p < 0.35) {
+        barPct = mapClamped(p, 0, 0.3, 52, 0);
+      } else if (p < 0.82) {
+        barPct = -mapClamped(p, 0.4, 0.65, 0, 60);
+      } else {
+        barPct = -mapClamped(p, 0.82, 1, 60, 0);
+      }
       barTop.style.transform = `translateY(${barPct}%)`;
       barBottom.style.transform = `translateY(${-barPct}%)`;
-      // cuando la cortina ya se abrió del todo, deja de tapar clics
-      barTop.style.pointerEvents = p > 0.65 ? 'none' : 'auto';
-      barBottom.style.pointerEvents = p > 0.65 ? 'none' : 'auto';
+      // solo deja de tapar clics mientras está totalmente abierta
+      const open = p > 0.65 && p < 0.82;
+      barTop.style.pointerEvents = open ? 'none' : 'auto';
+      barBottom.style.pointerEvents = open ? 'none' : 'auto';
 
       // "Ya empezaste." aparece mientras está cerrado, y se va rápido
       const wordIn = mapClamped(p, 0.1, 0.28, 0, 1);
@@ -142,8 +150,11 @@
       const wordScale = mapClamped(p, 0, 0.42, 0.8, 1.08);
       wordWrap.style.transform = `scale(${wordScale})`;
 
-      // la foto de fondo y el mensaje final se revelan al reabrirse
-      const revealOpacity = mapClamped(p, 0.4, 0.65, 0, 1);
+      // la foto de fondo y el mensaje final se revelan al reabrirse,
+      // y se difuminan a negro otra vez antes de que la cortina cierre
+      const revealIn = mapClamped(p, 0.4, 0.65, 0, 1);
+      const revealOut = 1 - mapClamped(p, 0.82, 1, 0, 1);
+      const revealOpacity = Math.min(revealIn, revealOut);
       reveal.style.opacity = String(revealOpacity);
       bg.style.opacity = String(revealOpacity);
       const bgScale = mapClamped(p, 0.4, 1, 1.15, 1);
