@@ -747,6 +747,44 @@
 .bio-grid-reverse .bio-img {
   order: 1;
 }
+
+/* ---------- QUIÉN SOY: micro-animaciones al hacer scroll ---------- */
+/* la rayita del "eyebrow" se dibuja sola al entrar la sección */
+.page-quien-soy .eyebrow-line {
+  width: 0;
+  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+}
+.page-quien-soy .reveal.is-visible .eyebrow-line { width: 32px; }
+
+/* las fotos se revelan con un barrido de abajo a arriba + zoom lento */
+.page-quien-soy .bio-img.reveal {
+  transform: none;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1.05s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.8s ease;
+}
+.page-quien-soy .bio-img.reveal.is-visible {
+  transform: none;
+  clip-path: inset(0 0 0 0);
+}
+
+/* las tarjetas de "Lo que me mueve" entran con un pequeño empujón + escala */
+.page-quien-soy .philosophy-card.reveal { transform: translateY(44px) scale(0.965); }
+.page-quien-soy .philosophy-card.reveal.is-visible { transform: translateY(0) scale(1); }
+.page-quien-soy .philosophy-card {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease, background-color 0.3s ease;
+}
+.page-quien-soy .philosophy-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-blush);
+  background: rgba(224,112,149,0.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-quien-soy .bio-img.reveal { clip-path: none; }
+  .page-quien-soy .eyebrow-line { width: 32px; transition: none; }
+}
 .nav-dropdown {
   position: relative;
 }
@@ -920,7 +958,7 @@
 /* ---------- TÍTULO ANTES DE LA GALERÍA DE PÁGINAS ---------- */
 .anexos-gallery-head {
   max-width: 640px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 1.4rem;
   text-align: center;
 }
 .anexos-gallery-head h2 {
@@ -928,7 +966,7 @@
   text-transform: uppercase;
   font-weight: 800;
   letter-spacing: -0.02em;
-  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
   color: var(--foreground);
 }
 .anexos-hint-arrow {
@@ -1103,43 +1141,57 @@
   }
   .lock-box h2 { margin-top: 1.4rem; }
 
-  /* ---------- GALERÍA "UN VISTAZO DENTRO" (cinta continua) ---------- */
-  .anexos-gallery { padding: 4.5rem 0 4rem; background: var(--deep-2); overflow: hidden; }
-  .anexos-cinta-viewport {
-    overflow: hidden;
-    cursor: grab;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  /* ---------- GALERÍA "UNA MIRADA POR DENTRO" (cinta continua) ---------- */
+  .anexos-gallery { padding: 3rem 0 3.5rem; background: var(--deep-2); overflow: hidden; }
+  .anexos-cinta-hint {
+    text-align: center;
+    margin: 0 auto 1.4rem;
+    color: var(--mist);
+    opacity: 0.75;
   }
+  .anexos-cinta-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 clamp(0.75rem, 4vw, 3rem);
+  }
+  .anexos-cinta-viewport {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    touch-action: pan-y;
+    cursor: grab;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  }
+  .anexos-cinta-viewport::-webkit-scrollbar { display: none; }
   .anexos-cinta-viewport.dragging { cursor: grabbing; }
   .anexos-cinta-track {
     display: flex;
-    gap: 1.25rem;
+    gap: 1rem;
     width: max-content;
-    padding: 0 1.5rem;
-    animation: anexos-cinta-scroll 38s linear infinite;
-  }
-  .anexos-cinta-viewport:hover .anexos-cinta-track,
-  .anexos-cinta-viewport.dragging .anexos-cinta-track { animation-play-state: paused; }
-  @keyframes anexos-cinta-scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    padding: 0 1.25rem;
   }
   .anexos-cinta-slide {
     flex: 0 0 auto;
-    width: 210px;
-    height: 296px;
+    width: 168px;
+    height: 236px;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.5);
     cursor: pointer;
     opacity: 0;
-    transform: translateY(60px) scale(0.88);
-    filter: blur(6px);
-    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 1.1s cubic-bezier(0.34, 1.56, 0.64, 1),
-                filter 0.9s ease-out;
+    transform: translateY(48px) scale(0.9);
+    filter: blur(5px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1s cubic-bezier(0.34, 1.56, 0.64, 1),
+                filter 0.8s ease-out;
   }
+  .anexos-cinta-slide:hover { box-shadow: 0 20px 44px rgba(224,112,149,0.28); }
   .anexos-cinta-viewport.is-visible .anexos-cinta-slide {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1156,14 +1208,31 @@
     pointer-events: none;
     user-select: none;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .anexos-cinta-track { animation: none; }
+
+  /* flechas para pasar imagen a imagen */
+  .anexos-cinta-arrow {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--border-blush);
+    background: rgba(12, 12, 12, 0.55);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+    z-index: 2;
   }
+  .anexos-cinta-arrow:hover { border-color: var(--blush); color: var(--blush); background: rgba(12, 12, 12, 0.8); }
   @media (max-width: 640px) {
-    .anexos-cinta-slide { width: 150px; height: 212px; }
+    .anexos-cinta-slide { width: 140px; height: 198px; }
+    .anexos-cinta-arrow { width: 38px; height: 38px; }
+    .anexos-cinta-stage { gap: 0.25rem; }
   }
 
-  /* ---------- LIGHTBOX de la galería ---------- */
+  /* ---------- FOTO A PANTALLA COMPLETA (lightbox) ---------- */
   .gallery-lightbox {
     position: fixed;
     inset: 0;
@@ -1171,23 +1240,50 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5vh 5vw;
-    background: rgba(12, 12, 12, 0);
+    padding: 6vh 6vw;
+    background: rgba(8, 6, 8, 0);
     cursor: zoom-out;
     opacity: 0;
-    transition: opacity 0.2s ease, background-color 0.2s ease;
+    transition: opacity 0.22s ease, background-color 0.22s ease;
   }
-  .gallery-lightbox.is-open { opacity: 1; background: rgba(12, 12, 12, 0.9); }
-  .gallery-lightbox img {
+  .gallery-lightbox.is-open { opacity: 1; background: rgba(8, 6, 8, 0.94); }
+  .gallery-lightbox-stage {
     max-width: 100%;
     max-height: 100%;
-    border-radius: 14px;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-in;
+    overflow: auto;
+    scrollbar-width: none;
+  }
+  .gallery-lightbox-stage::-webkit-scrollbar { display: none; }
+  .gallery-lightbox-stage.is-zoomed { cursor: zoom-out; }
+  .gallery-lightbox img {
+    max-width: 100%;
+    max-height: 86vh;
+    border-radius: 12px;
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.65);
     transform: scale(0.94);
-    transition: transform 0.2s ease;
-    cursor: default;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .gallery-lightbox.is-open img { transform: scale(1); }
+  .gallery-lightbox-stage.is-zoomed img {
+    max-width: none;
+    max-height: none;
+    width: min(1600px, 175vw);
+    transform: scale(1);
+  }
+  .gallery-lightbox-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--mist);
+  }
   .gallery-lightbox-close, .gallery-lightbox-nav {
     position: absolute;
     display: flex;
@@ -1195,10 +1291,11 @@
     justify-content: center;
     border-radius: 50%;
     border: 1px solid rgba(242, 237, 232, 0.25);
-    background: rgba(12, 12, 12, 0.4);
+    background: rgba(12, 12, 12, 0.45);
     color: var(--foreground);
     cursor: pointer;
     transition: all 0.2s ease;
+    z-index: 2;
   }
   .gallery-lightbox-close:hover, .gallery-lightbox-nav:hover { border-color: var(--blush); color: var(--blush); }
   .gallery-lightbox-close { top: 24px; right: 24px; width: 44px; height: 44px; }
@@ -1210,6 +1307,7 @@
     .gallery-lightbox-prev { left: 6px; }
     .gallery-lightbox-next { right: 6px; }
   }
+  body.lightbox-open { overflow: hidden; }
 
   /* ---------- EN CONSTRUCCIÓN (cinematográfico, al fondo de la página) ---------- */
   .coming-cinematic {
@@ -1283,7 +1381,7 @@
      el mensaje y el botón. ---------- */
   .cut-pin {
     position: relative;
-    height: 220vh;
+    height: 170vh;
     background: var(--deep);
   }
   .cut-sticky {
@@ -1385,7 +1483,7 @@
      cinematográfica sin repetir la animación de arriba. ---------- */
   .archivo-cta {
     position: relative;
-    padding: 6rem 0 5rem;
+    padding: 3rem 0 5rem;
     background: transparent;
   }
   .archivo-cta-head {
@@ -1413,16 +1511,23 @@
   .archivo-cta .reveal-left,
   .archivo-cta .reveal-right {
     filter: blur(8px);
-    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* "Acceder a la guía" entra claramente desde la izquierda */
+  .archivo-cta .reveal-left {
+    transform: translateX(-160px);
   }
   .archivo-cta .reveal-left.is-visible,
   .archivo-cta .reveal-right.is-visible {
     filter: blur(0);
   }
+  .archivo-cta .reveal-left.is-visible {
+    transform: translateX(0);
+  }
   @media (prefers-reduced-motion: reduce) {
-    .archivo-cta .reveal-left, .archivo-cta .reveal-right { filter: none; }
+    .archivo-cta .reveal-left, .archivo-cta .reveal-right { filter: none; transform: none; }
   }
   @media (max-width: 640px) {
     .archivo-cta-head { flex-direction: column; align-items: flex-start; }

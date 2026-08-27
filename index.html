@@ -302,8 +302,19 @@
       <h2>Una mirada por dentro</h2>
     </div>
   </div>
-  <div class="anexos-cinta-viewport" id="anexosCinta">
-    <div class="anexos-cinta-track" id="anexosCintaTrack"></div>
+  <div class="wrap">
+    <p class="anexos-cinta-hint mono-label">Pasa las flechas o arrastra · pulsa una imagen para ampliarla</p>
+  </div>
+  <div class="anexos-cinta-stage">
+    <button class="anexos-cinta-arrow anexos-cinta-arrow-prev" id="anexosPrev" aria-label="Ver imagen anterior">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="anexos-cinta-viewport" id="anexosCinta">
+      <div class="anexos-cinta-track" id="anexosCintaTrack"></div>
+    </div>
+    <button class="anexos-cinta-arrow anexos-cinta-arrow-next" id="anexosNext" aria-label="Ver imagen siguiente">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
   </div>
 </section>
 
@@ -386,7 +397,7 @@
 <!-- FINAL CTA 1: transición cinematográfica tipo "cortina" -->
 <section class="cut-pin final-cta" id="cutPin">
   <div class="cut-sticky">
-    <img src="fondo-cta-final.png" alt="" class="cut-bg" id="cutBg">
+    <img src="4-4.png" alt="" class="cut-bg" id="cutBg">
     <div class="cut-vignette"></div>
     <div class="cut-reveal" id="cutReveal">
       <div class="wrap">

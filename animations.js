@@ -161,7 +161,11 @@
       ticking = false;
       const p = clamp01((window.scrollY - top) / range);
       const refT = clamp01(p / REF_END);
-      const closeT = clamp01((p - REF_END) / (1 - REF_END));
+      // el cierre a negro termina en p=0.92 (no en 1): así el último tramo
+      // de scroll ya está en negro y se enlaza directamente con "Acceder a
+      // la guía", sin hueco muerto entre las dos escenas.
+      const CLOSE_END = 0.92;
+      const closeT = clamp01((p - REF_END) / (CLOSE_END - REF_END));
 
       const barTopRef = interp(refT, [0, 0.42, 0.62, 1], [-52, 0, 0, -52]);
       const barTopPct = closeT === 0 ? barTopRef : interp(closeT, [0, 1], [-52, 0]);
@@ -208,34 +212,35 @@
     barTop: 'cutBarTop', barBottom: 'cutBarBottom', wordWrap: 'cutWordWrap'
   });
 
-  // ---------- GALERÍA "UN VISTAZO DENTRO": cinta continua, arrastrable,
-  // con zoom al hacer clic y desplazamiento al acercar el ratón a los
-  // bordes. Entrada GRANDE: cada foto llega por separado, en cascada,
-  // no todo el bloque de golpe. ----------
+  // ---------- GALERÍA "UNA MIRADA POR DENTRO": cinta continua que se
+  // desliza sola despacio. Flechas para avanzar imagen a imagen, se puede
+  // arrastrar, y al pulsar una foto se abre a pantalla completa (con sus
+  // propias flechas). Entrada en cascada: cada foto llega por separado. ----------
   (function anexosCinta() {
     const viewport = document.getElementById('anexosCinta');
     const track = document.getElementById('anexosCintaTrack');
     if (!viewport || !track) return;
+    const btnPrev = document.getElementById('anexosPrev');
+    const btnNext = document.getElementById('anexosNext');
 
     const TOTAL = 11;
     const images = Array.from({ length: TOTAL }, (_, i) => `anexo-${String(i + 1).padStart(2, '0')}.png`);
-    const loopImages = images.concat(images); // duplicadas para el bucle infinito
+    const loopImages = images.concat(images); // duplicadas para el bucle sin costuras
     loopImages.forEach((src, i) => {
       const slide = document.createElement('div');
       slide.className = 'anexos-cinta-slide';
-      slide.style.transitionDelay = ((i % TOTAL) * 0.07) + 's';
+      slide.dataset.index = i % TOTAL;
+      slide.style.transitionDelay = ((i % TOTAL) * 0.06) + 's';
       const img = document.createElement('img');
       img.src = src;
-      img.alt = '';
+      img.alt = 'Página de la guía';
       img.loading = 'lazy';
+      img.draggable = false;
       slide.appendChild(img);
-      slide.addEventListener('click', () => {
-        if (dragged) return;
-        openGalleryLightbox(images, i % TOTAL);
-      });
       track.appendChild(slide);
     });
 
+    // entrada en cascada al llegar a pantalla
     if (reduceMotion) {
       viewport.classList.add('is-visible');
     } else {
@@ -250,65 +255,113 @@
       revealObserver.observe(viewport);
     }
 
-    if (reduceMotion) track.style.animation = 'none';
+    // ---- desplazamiento automático suave (con scrollLeft, no con CSS, para
+    // que las flechas y el arrastre no peleen con la animación) ----
+    const AUTO_SPEED = 0.45; // px por frame ≈ lento y tranquilo
+    let paused = false;        // ratón encima
+    let dragging = false;      // arrastrando
+    let lightboxOpen = false;  // foto ampliada abierta
 
-    // ---- arrastrar con el ratón/dedo ----
-    let isDown = false, startX = 0, scrollStart = 0, dragged = false;
-    viewport.addEventListener('pointerdown', (e) => {
-      isDown = true; dragged = false;
-      viewport.classList.add('dragging');
-      startX = e.clientX;
-      scrollStart = viewport.scrollLeft;
-      viewport.setPointerCapture(e.pointerId);
-    });
-    viewport.addEventListener('pointermove', (e) => {
-      if (!isDown) return;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) > 8) dragged = true;
-      viewport.scrollLeft = scrollStart - dx;
-    });
-    ['pointerup', 'pointerleave'].forEach(ev => {
-      viewport.addEventListener(ev, () => {
-        isDown = false;
-        viewport.classList.remove('dragging');
-      });
-    });
-
-    // ---- el ratón "conduce" la cinta: a la izquierda se mueve hacia la
-    // izquierda, a la derecha hacia la derecha, en el centro se para.
-    // No hace falta arrastrar, solo mover el ratón por encima. ----
-    if (!reduceMotion) {
-      const MAX_SPEED = 13;
-      const DEAD_ZONE = 0.08; // franja central sin movimiento, para poder mirar tranquila
-      let steerSpeed = 0;
-      let hovering = false;
-      viewport.addEventListener('mouseenter', () => { hovering = true; });
-      viewport.addEventListener('mouseleave', () => { hovering = false; steerSpeed = 0; });
-      viewport.addEventListener('mousemove', (e) => {
-        if (isDown) { steerSpeed = 0; return; }
-        const rect = viewport.getBoundingClientRect();
-        // -1 (borde izquierdo) → 0 (centro) → 1 (borde derecho)
-        let norm = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        if (Math.abs(norm) < DEAD_ZONE) {
-          steerSpeed = 0;
-        } else {
-          const sign = norm < 0 ? -1 : 1;
-          const t = (Math.abs(norm) - DEAD_ZONE) / (1 - DEAD_ZONE);
-          steerSpeed = sign * MAX_SPEED * t * t; // suave al principio, rápido en los bordes
-        }
-      });
-      (function steerLoop() {
-        requestAnimationFrame(steerLoop);
-        if (hovering && steerSpeed !== 0 && !isDown) {
-          viewport.scrollLeft += steerSpeed;
-        }
-      })();
+    function halfWidth() { return track.scrollWidth / 2 || 1; }
+    // mantiene el scroll en [0.5·half, 1.5·half): siempre hay recorrido para
+    // arrastrar en ambos sentidos y el salto es invisible (contenido duplicado)
+    function wrapScroll() {
+      const half = halfWidth();
+      if (viewport.scrollLeft >= half * 1.5) viewport.scrollLeft -= half;
+      else if (viewport.scrollLeft < half * 0.5) viewport.scrollLeft += half;
     }
+    // empezar en el medio para tener recorrido a ambos lados
+    requestAnimationFrame(() => { viewport.scrollLeft = halfWidth(); });
+
+    function loop() {
+      requestAnimationFrame(loop);
+      if (reduceMotion || paused || dragging || lightboxOpen) return;
+      viewport.scrollLeft += AUTO_SPEED;
+      wrapScroll();
+    }
+    loop();
+
+    viewport.addEventListener('mouseenter', () => { paused = true; });
+    viewport.addEventListener('mouseleave', () => { paused = false; });
+
+    // ---- flechas: avanzan una imagen (con margen) ----
+    function step(dir) {
+      const slide = track.querySelector('.anexos-cinta-slide');
+      const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || '16') || 16;
+      const amount = Math.max((slide ? slide.offsetWidth + gap : 0), 160);
+      viewport.scrollBy({ left: dir * amount, behavior: 'smooth' });
+      // recolocar dentro del bucle una vez terminado el scroll suave
+      setTimeout(wrapScroll, 420);
+    }
+    if (btnPrev) btnPrev.addEventListener('click', () => step(-1));
+    if (btnNext) btnNext.addEventListener('click', () => step(1));
+
+    // ---- arrastrar + detectar pulsación (sin setPointerCapture, que
+    // retargetea el 'click' y rompía la apertura de la foto) ----
+    let startX = 0, startScroll = 0, moved = 0, activeId = null, lastOpen = 0;
+
+    function openFor(slide) {
+      if (!slide) return;
+      if (Date.now() - lastOpen < 400) return; // evita doble apertura (pointerup + click)
+      lastOpen = Date.now();
+      openGalleryLightbox(images, Number(slide.dataset.index) || 0);
+    }
+
+    viewport.addEventListener('pointerdown', (e) => {
+      if (e.button !== undefined && e.button !== 0) return;
+      dragging = true;
+      activeId = e.pointerId;
+      startX = e.clientX;
+      startScroll = viewport.scrollLeft;
+      moved = 0;
+      viewport.classList.add('dragging');
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!dragging || e.pointerId !== activeId) return;
+      const dx = e.clientX - startX;
+      moved = Math.max(moved, Math.abs(dx));
+      viewport.scrollLeft = startScroll - dx;
+      wrapScroll();
+    });
+
+    window.addEventListener('pointerup', (e) => {
+      if (!dragging || e.pointerId !== activeId) return;
+      dragging = false;
+      activeId = null;
+      viewport.classList.remove('dragging');
+      if (moved < 6) {
+        let slide = (e.target && e.target.closest) ? e.target.closest('.anexos-cinta-slide') : null;
+        if (!slide) {
+          const el = document.elementFromPoint(e.clientX, e.clientY);
+          slide = el && el.closest ? el.closest('.anexos-cinta-slide') : null;
+        }
+        openFor(slide);
+      }
+    });
+
+    window.addEventListener('pointercancel', () => {
+      dragging = false; activeId = null; viewport.classList.remove('dragging');
+    });
+
+    // respaldo: 'click' normal delegado (ahora funciona porque la cinta se
+    // pausa al pasar el ratón y ya no hay captura de puntero)
+    track.addEventListener('click', (e) => {
+      if (moved >= 6) return;
+      const slide = e.target.closest && e.target.closest('.anexos-cinta-slide');
+      openFor(slide);
+    });
+
+    // exponer el estado del lightbox para pausar la cinta
+    viewport._setLightbox = (v) => { lightboxOpen = v; };
   })();
 
-  // ---------- LIGHTBOX compartido de la galería (con flechas) ----------
+  // ---------- FOTO A PANTALLA COMPLETA (lightbox) con flechas y zoom ----------
   function openGalleryLightbox(images, startIndex) {
     let idx = startIndex;
+    const viewport = document.getElementById('anexosCinta');
+    if (viewport && viewport._setLightbox) viewport._setLightbox(true);
+
     const overlay = document.createElement('div');
     overlay.className = 'gallery-lightbox';
     overlay.innerHTML = `
@@ -318,21 +371,35 @@
       <button class="gallery-lightbox-nav gallery-lightbox-prev" aria-label="Anterior">
         <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      <img alt="">
+      <div class="gallery-lightbox-stage"><img alt="Página de la guía ampliada"></div>
       <button class="gallery-lightbox-nav gallery-lightbox-next" aria-label="Siguiente">
         <svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
+      <p class="gallery-lightbox-counter"></p>
     `;
     document.body.appendChild(overlay);
+    document.body.classList.add('lightbox-open');
     const img = overlay.querySelector('img');
-    const show = () => { img.src = images[((idx % images.length) + images.length) % images.length]; };
+    const counter = overlay.querySelector('.gallery-lightbox-counter');
+    const stage = overlay.querySelector('.gallery-lightbox-stage');
+    let zoomed = false;
+
+    const show = () => {
+      const real = ((idx % images.length) + images.length) % images.length;
+      img.src = images[real];
+      counter.textContent = (real + 1) + ' / ' + images.length;
+      zoomed = false;
+      stage.classList.remove('is-zoomed');
+    };
     show();
     requestAnimationFrame(() => overlay.classList.add('is-open'));
 
     function close() {
       overlay.classList.remove('is-open');
       document.removeEventListener('keydown', onKeyDown);
-      setTimeout(() => overlay.remove(), 200);
+      document.body.classList.remove('lightbox-open');
+      if (viewport && viewport._setLightbox) viewport._setLightbox(false);
+      setTimeout(() => overlay.remove(), 220);
     }
     function next() { idx += 1; show(); }
     function prev() { idx -= 1; show(); }
@@ -341,6 +408,12 @@
       if (e.key === 'ArrowRight') next();
       if (e.key === 'ArrowLeft') prev();
     }
+    // pulsar la imagen: acercar / alejar
+    stage.addEventListener('click', (e) => {
+      e.stopPropagation();
+      zoomed = !zoomed;
+      stage.classList.toggle('is-zoomed', zoomed);
+    });
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay || e.target.closest('.gallery-lightbox-close')) close();
     });
@@ -470,7 +543,7 @@
   // tiene que verse en móvil, no solo en ordenador)
   (function wordRevealHeadings() {
     if (reduceMotion) return;
-    const headings = document.querySelectorAll('.section-head h2, .final-cta h2, .gancho-heading');
+    const headings = document.querySelectorAll('.section-head h2, .final-cta h2, .gancho-heading, .bio-content h2, .philosophy-section > .wrap h2, .philosophy-closing h3, .anexos-gallery-head h2');
     if (!headings.length) return;
 
     const splitIntoWords = (el) => {
