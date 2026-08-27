@@ -1381,7 +1381,7 @@
      el mensaje y el botón. ---------- */
   .cut-pin {
     position: relative;
-    height: 170vh;
+    height: 138vh;
     background: var(--deep);
   }
   .cut-sticky {

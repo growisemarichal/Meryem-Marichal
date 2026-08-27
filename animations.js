@@ -164,7 +164,7 @@
       // el cierre a negro termina en p=0.92 (no en 1): así el último tramo
       // de scroll ya está en negro y se enlaza directamente con "Acceder a
       // la guía", sin hueco muerto entre las dos escenas.
-      const CLOSE_END = 0.92;
+      const CLOSE_END = 0.87;
       const closeT = clamp01((p - REF_END) / (CLOSE_END - REF_END));
 
       const barTopRef = interp(refT, [0, 0.42, 0.62, 1], [-52, 0, 0, -52]);
@@ -182,8 +182,9 @@
       const wordScale = interp(refT, [0.36, 0.66], [0.82, 1.18]);
       wordWrap.style.transform = `scale(${wordScale})`;
 
-      // el contenido se revela al reabrirse la cortina
-      const contentOpacity = interp(refT, [0.6, 0.78], [0, 1]);
+      // el contenido se revela al reabrirse la cortina (justo antes del
+      // corte, para que no se quede mirando al vacío)
+      const contentOpacity = interp(refT, [0.64, 0.82], [0, 1]);
       reveal.style.opacity = String(contentOpacity * (1 - closeT));
       if (bg) {
         const imgScale = interp(refT, [0.6, 1], [1.35, 1]);
