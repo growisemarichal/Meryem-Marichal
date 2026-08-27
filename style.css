@@ -1452,10 +1452,9 @@
     font-weight: 800;
     line-height: 0.84;
     letter-spacing: -0.035em;
-    /* la referencia usa clamp(3rem,16vw,14rem) para "Cut." (4 letras);
-       "Ya empezaste." es más largo, así que se baja el ritmo para que
-       llene la pantalla igual sin salirse */
-    font-size: clamp(2.4rem, 12vw, 9.5rem);
+    /* tamaño elegido por la clienta con la página de prueba
+       (la referencia usaba clamp(3rem,16vw,14rem) para "Cut.") */
+    font-size: clamp(2.4rem, 7.5vw, 4.5rem);
     text-align: center;
     color: var(--blush);
     animation: cut-rgb-split 6s infinite steps(1);
@@ -1467,7 +1466,7 @@
     letter-spacing: -0.035em;
     font-style: normal;
     color: var(--foreground);
-    font-size: clamp(2.5rem, 8vw, 7rem);
+    font-size: clamp(2.5rem, 7.5vw, 4rem);
     line-height: 0.84;
     text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
   }
