@@ -1401,6 +1401,19 @@
     object-fit: cover;
     opacity: 0;
     transform: scale(1.35);
+    /* look cinematográfico en blanco y negro: sin color, negros marcados
+       y un punto más oscura para que el texto blanco resalte */
+    filter: grayscale(1) contrast(1.15) brightness(0.72);
+  }
+  /* viñeta: oscurece las esquinas, sensación de fotograma de cine */
+  .cut-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 45%, transparent 35%, rgba(0,0,0,0.55) 100%),
+      linear-gradient(to bottom, rgba(0,0,0,0.35), transparent 30%, transparent 65%, rgba(0,0,0,0.55));
   }
   .cut-reveal {
     position: absolute;
@@ -1412,16 +1425,8 @@
     justify-content: center;
     text-align: center;
     padding: 0 1.5rem;
-    background: rgba(20, 18, 20, 0.4);
+    background: rgba(12, 10, 12, 0.32);
     opacity: 0;
-  }
-  .cut-eyebrow {
-    font-family: 'Space Mono', ui-monospace, monospace;
-    font-size: 0.6875rem;
-    letter-spacing: 0.34em;
-    text-transform: uppercase;
-    color: var(--blush);
-    margin-bottom: 1.5rem;
   }
   .cut-bar {
     position: absolute;
@@ -1468,7 +1473,9 @@
     color: var(--foreground);
     font-size: clamp(2.5rem, 7.5vw, 4rem);
     line-height: 0.84;
-    text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+    /* sombra ajustada: solo define el borde de la letra, sin la "mancha"
+       negra difusa que hacía la de 40px */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
   }
   /* réplica del rgb-split de la referencia */
   @keyframes cut-rgb-split {
