@@ -1093,110 +1093,98 @@
   }
   .lock-box h2 { margin-top: 1.4rem; }
 
-    /* ---------- ANEXOS / GALERÍA SCROLL HORIZONTAL ---------- */
-  .anexos-scroll {
-    position: relative;
-    height: 480vh;
-    background: var(--deep-2);
-  }
-  .anexos-sticky {
-    position: sticky;
-    top: 0;
-    height: 100vh;
+  /* ---------- GALERÍA "UN VISTAZO DENTRO" (cinta continua) ---------- */
+  .anexos-gallery { padding: 2.5rem 0 4rem; background: var(--deep-2); overflow: hidden; }
+  .anexos-cinta-viewport {
     overflow: hidden;
-    display: flex;
-    align-items: center;
+    cursor: grab;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
   }
-  .anexos-track {
+  .anexos-cinta-viewport.dragging { cursor: grabbing; }
+  .anexos-cinta-track {
     display: flex;
-    gap: 3vw;
-    padding-left: 8vw;
-    padding-right: 8vw;
-    will-change: transform;
+    gap: 1.25rem;
+    width: max-content;
+    padding: 0 1.5rem;
+    animation: anexos-cinta-scroll 38s linear infinite;
   }
-  .anexos-slide {
+  .anexos-cinta-viewport:hover .anexos-cinta-track,
+  .anexos-cinta-viewport.dragging .anexos-cinta-track { animation-play-state: paused; }
+  @keyframes anexos-cinta-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .anexos-cinta-slide {
     flex: 0 0 auto;
-    width: min(58vw, 460px);
-    height: 80vh;
-    border-radius: 14px;
+    width: 210px;
+    height: 296px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.55);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+    cursor: pointer;
   }
-  .anexos-slide img {
+  .anexos-cinta-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-  }
-  .anexos-hint {
-    position: sticky;
-    top: calc(100vh - 3.5rem);
-    text-align: center;
-    opacity: 0.5;
     pointer-events: none;
-  }
-  @media (max-width: 640px) {
-    .anexos-scroll { height: 620vh; }
-    .anexos-slide { width: 78vw; height: 62vh; }
-  }
-
-  /* ---------- GALERÍA "UN VISTAZO DENTRO" (con flechas) ---------- */
-  .anexos-gallery { padding: 2.5rem 0 4rem; background: var(--deep-2); }
-  .anexos-gallery-wrap {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  .anexos-viewport {
-    flex: 1;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    cursor: grab;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .anexos-viewport::-webkit-scrollbar { display: none; }
-  .anexos-viewport.dragging { cursor: grabbing; scroll-behavior: auto; }
-  .anexos-track {
-    display: flex;
-    gap: 3vw;
     user-select: none;
   }
-  .anexos-slide {
-    flex: 0 0 auto;
-    width: 160px;
-    height: 226px;
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.55);
+  @media (prefers-reduced-motion: reduce) {
+    .anexos-cinta-track { animation: none; }
   }
-  .anexos-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  @media (max-width: 640px) {
+    .anexos-cinta-slide { width: 150px; height: 212px; }
   }
-  .anexos-arrow {
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 1px solid var(--border-blush);
-    background: var(--deep);
-    color: var(--blush);
+
+  /* ---------- LIGHTBOX de la galería ---------- */
+  .gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: all 0.25s ease;
+    padding: 5vh 5vw;
+    background: rgba(12, 12, 12, 0);
+    cursor: zoom-out;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
   }
-  .anexos-arrow:hover { background: var(--blush); color: var(--deep); }
-  .anexos-arrow:disabled { opacity: 0.3; cursor: default; }
-  .anexos-arrow:disabled:hover { background: var(--deep); color: var(--blush); }
-  .anexos-hint { text-align: center; margin-top: 1.5rem; opacity: 0.5; }
+  .gallery-lightbox.is-open { opacity: 1; background: rgba(12, 12, 12, 0.9); }
+  .gallery-lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 14px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+    transform: scale(0.94);
+    transition: transform 0.2s ease;
+    cursor: default;
+  }
+  .gallery-lightbox.is-open img { transform: scale(1); }
+  .gallery-lightbox-close, .gallery-lightbox-nav {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(242, 237, 232, 0.25);
+    background: rgba(12, 12, 12, 0.4);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .gallery-lightbox-close:hover, .gallery-lightbox-nav:hover { border-color: var(--blush); color: var(--blush); }
+  .gallery-lightbox-close { top: 24px; right: 24px; width: 44px; height: 44px; }
+  .gallery-lightbox-nav { top: 50%; transform: translateY(-50%); width: 48px; height: 48px; }
+  .gallery-lightbox-prev { left: 24px; }
+  .gallery-lightbox-next { right: 24px; }
   @media (max-width: 640px) {
-    .anexos-slide { width: 78vw; height: 52vh; }
-    .anexos-arrow { width: 40px; height: 40px; }
+    .gallery-lightbox-nav { width: 38px; height: 38px; }
+    .gallery-lightbox-prev { left: 6px; }
+    .gallery-lightbox-next { right: 6px; }
   }
 
   /* ---------- EN CONSTRUCCIÓN (cinematográfico, al fondo de la página) ---------- */

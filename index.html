@@ -10,7 +10,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Archivo:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="carousel3d.css">
 </head>
 <body>
 
@@ -303,8 +302,8 @@
       <p class="mono-label">Un vistazo dentro</p>
     </div>
   </div>
-  <div class="wrap">
-    <div id="carousel3d-root"></div>
+  <div class="anexos-cinta-viewport" id="anexosCinta">
+    <div class="anexos-cinta-track" id="anexosCintaTrack"></div>
   </div>
 </section>
 
@@ -503,8 +502,6 @@
     });
   });
 </script>
-
-<script type="module" src="carousel3d.js"></script>
 
 <script>
   // "En construcción": la mancha de luz sigue al ratón dentro de la sección.

@@ -173,22 +173,142 @@
     window.addEventListener('resize', () => { measure(); render(); });
   })();
 
-  // ---------- CARRUSEL 3D: entrada con rebote al llegar scrolleando ----------
-  (function carousel3dReveal() {
-    const root = document.getElementById('carousel3d-root');
-    if (!root) return;
-    root.classList.add('carousel3d-reveal');
-    if (reduceMotion) { root.classList.add('is-visible'); return; }
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
+  // ---------- GALERÍA "UN VISTAZO DENTRO": cinta continua, arrastrable,
+  // con zoom al hacer clic y desplazamiento al acercar el ratón a los
+  // bordes. Entrada con rebote al llegar scrolleando. ----------
+  (function anexosCinta() {
+    const viewport = document.getElementById('anexosCinta');
+    const track = document.getElementById('anexosCintaTrack');
+    if (!viewport || !track) return;
+
+    viewport.classList.add('carousel3d-reveal');
+    if (reduceMotion) {
+      viewport.classList.add('is-visible');
+    } else {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2, rootMargin: '0px 0px -80px 0px' });
+      revealObserver.observe(viewport);
+    }
+
+    const TOTAL = 11;
+    const images = Array.from({ length: TOTAL }, (_, i) => `anexo-${String(i + 1).padStart(2, '0')}.png`);
+    const loopImages = images.concat(images); // duplicadas para el bucle infinito
+    loopImages.forEach((src, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'anexos-cinta-slide';
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = '';
+      img.loading = 'lazy';
+      slide.appendChild(img);
+      slide.addEventListener('click', () => {
+        if (dragged) return;
+        openGalleryLightbox(images, i % TOTAL);
+      });
+      track.appendChild(slide);
+    });
+
+    if (reduceMotion) track.style.animation = 'none';
+
+    // ---- arrastrar con el ratón/dedo ----
+    let isDown = false, startX = 0, scrollStart = 0, dragged = false;
+    viewport.addEventListener('pointerdown', (e) => {
+      isDown = true; dragged = false;
+      viewport.classList.add('dragging');
+      startX = e.clientX;
+      scrollStart = viewport.scrollLeft;
+      viewport.setPointerCapture(e.pointerId);
+    });
+    viewport.addEventListener('pointermove', (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 3) dragged = true;
+      viewport.scrollLeft = scrollStart - dx;
+    });
+    ['pointerup', 'pointerleave'].forEach(ev => {
+      viewport.addEventListener(ev, () => {
+        isDown = false;
+        viewport.classList.remove('dragging');
+      });
+    });
+
+    // ---- acercar el ratón al borde izquierdo/derecho: se desplaza sola ----
+    if (!reduceMotion) {
+      const EDGE = 90; // px desde el borde donde ya empieza a moverse
+      const MAX_SPEED = 11;
+      let edgeSpeed = 0;
+      let hovering = false;
+      viewport.addEventListener('mouseenter', () => { hovering = true; });
+      viewport.addEventListener('mouseleave', () => { hovering = false; edgeSpeed = 0; });
+      viewport.addEventListener('mousemove', (e) => {
+        if (isDown) { edgeSpeed = 0; return; }
+        const rect = viewport.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        if (x < EDGE) {
+          edgeSpeed = -MAX_SPEED * (1 - x / EDGE);
+        } else if (x > rect.width - EDGE) {
+          edgeSpeed = MAX_SPEED * (1 - (rect.width - x) / EDGE);
+        } else {
+          edgeSpeed = 0;
         }
       });
-    }, { threshold: 0.2, rootMargin: '0px 0px -80px 0px' });
-    observer.observe(root);
+      (function edgeScrollLoop() {
+        requestAnimationFrame(edgeScrollLoop);
+        if (hovering && edgeSpeed !== 0 && !isDown) {
+          viewport.scrollLeft += edgeSpeed;
+        }
+      })();
+    }
   })();
+
+  // ---------- LIGHTBOX compartido de la galería (con flechas) ----------
+  function openGalleryLightbox(images, startIndex) {
+    let idx = startIndex;
+    const overlay = document.createElement('div');
+    overlay.className = 'gallery-lightbox';
+    overlay.innerHTML = `
+      <button class="gallery-lightbox-close" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button class="gallery-lightbox-nav gallery-lightbox-prev" aria-label="Anterior">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <img alt="">
+      <button class="gallery-lightbox-nav gallery-lightbox-next" aria-label="Siguiente">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    `;
+    document.body.appendChild(overlay);
+    const img = overlay.querySelector('img');
+    const show = () => { img.src = images[((idx % images.length) + images.length) % images.length]; };
+    show();
+    requestAnimationFrame(() => overlay.classList.add('is-open'));
+
+    function close() {
+      overlay.classList.remove('is-open');
+      document.removeEventListener('keydown', onKeyDown);
+      setTimeout(() => overlay.remove(), 200);
+    }
+    function next() { idx += 1; show(); }
+    function prev() { idx -= 1; show(); }
+    function onKeyDown(e) {
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    }
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay || e.target.closest('.gallery-lightbox-close')) close();
+    });
+    overlay.querySelector('.gallery-lightbox-prev').addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+    overlay.querySelector('.gallery-lightbox-next').addEventListener('click', (e) => { e.stopPropagation(); next(); });
+    document.addEventListener('keydown', onKeyDown);
+  }
 
   // ---------- CONSTELACIÓN DE FONDO: puntos que se iluminan y se conectan
   // cerca del ratón. Cubre toda la página (igual que en la referencia),
