@@ -307,6 +307,12 @@
     position: absolute; top: 0; left: 0; right: 0;
     height: 1px;
     background: linear-gradient(to right, transparent, var(--border-blush), transparent);
+    transform: scaleX(0);
+    transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .top-line.is-visible { transform: scaleX(1); }
+  @media (prefers-reduced-motion: reduce) {
+    .top-line { transform: scaleX(1); transition: none; }
   }
   .section-head { max-width: 620px; }
   .section-head h2 {
