@@ -96,11 +96,12 @@
   // y directa que la primera versión, para que se sienta dinámica. ----------
   (function cutSceneReveal() {
     const pin = document.getElementById('cutPin');
+    const bg = document.getElementById('cutBg');
     const reveal = document.getElementById('cutReveal');
     const barTop = document.getElementById('cutBarTop');
     const barBottom = document.getElementById('cutBarBottom');
     const wordWrap = document.getElementById('cutWordWrap');
-    if (!pin || !reveal || !barTop || !barBottom || !wordWrap) return;
+    if (!pin || !bg || !reveal || !barTop || !barBottom || !wordWrap) return;
     if (reduceMotion) return; // el CSS ya deja el mensaje visible sin animar
 
     const clamp01 = (n) => Math.min(1, Math.max(0, n));
@@ -141,9 +142,12 @@
       const wordScale = mapClamped(p, 0, 0.42, 0.8, 1.08);
       wordWrap.style.transform = `scale(${wordScale})`;
 
-      // el mensaje final se revela al reabrirse
+      // la foto de fondo y el mensaje final se revelan al reabrirse
       const revealOpacity = mapClamped(p, 0.4, 0.65, 0, 1);
       reveal.style.opacity = String(revealOpacity);
+      bg.style.opacity = String(revealOpacity);
+      const bgScale = mapClamped(p, 0.4, 1, 1.15, 1);
+      bg.style.transform = `scale(${bgScale})`;
     }
 
     function onScroll() {
