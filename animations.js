@@ -257,9 +257,11 @@
     // empezar en el medio para tener recorrido a ambos lados
     requestAnimationFrame(() => { viewport.scrollLeft = halfWidth(); });
 
+    let pauseUntil = 0; // el auto-scroll se detiene hasta este momento (flechas)
+
     function loop() {
       requestAnimationFrame(loop);
-      if (reduceMotion || paused || dragging || lightboxOpen) return;
+      if (reduceMotion || paused || dragging || lightboxOpen || Date.now() < pauseUntil) return;
       viewport.scrollLeft += AUTO_SPEED;
       wrapScroll();
     }
@@ -268,14 +270,24 @@
     viewport.addEventListener('mouseenter', () => { paused = true; });
     viewport.addEventListener('mouseleave', () => { paused = false; });
 
-    // ---- flechas: avanzan una imagen (con margen) ----
+    // ---- flechas: saltan una imagen. Se anima a mano (no scrollBy suave)
+    // porque el bucle de auto-scroll cancelaba el scroll nativo cada frame,
+    // y por eso las flechas "no hacían nada". ----
     function step(dir) {
       const slide = track.querySelector('.anexos-cinta-slide');
       const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || '16') || 16;
-      const amount = Math.max((slide ? slide.offsetWidth + gap : 0), 160);
-      viewport.scrollBy({ left: dir * amount, behavior: 'smooth' });
-      // recolocar dentro del bucle una vez terminado el scroll suave
-      setTimeout(wrapScroll, 420);
+      const dist = Math.max((slide ? slide.offsetWidth + gap : 0), 160) * dir;
+      const from = viewport.scrollLeft;
+      const DUR = 420;
+      const t0 = performance.now();
+      pauseUntil = Date.now() + DUR + 1400; // deja ver la foto a la que salta
+      (function tick(now) {
+        const t = Math.min(1, (now - t0) / DUR);
+        const e = 1 - Math.pow(1 - t, 3); // easeOutCubic
+        viewport.scrollLeft = from + dist * e;
+        if (t < 1) requestAnimationFrame(tick);
+        else wrapScroll();
+      })(t0);
     }
     if (btnPrev) btnPrev.addEventListener('click', () => step(-1));
     if (btnNext) btnNext.addEventListener('click', () => step(1));

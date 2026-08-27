@@ -525,6 +525,25 @@
       }
     });
   });
+
+  // Las preguntas llegan escalonadas al hacer scroll a la sección.
+  (function () {
+    const wrap = document.getElementById('faq-wrap');
+    if (!wrap) return;
+    const reveal = () => {
+      wrap.classList.add('faq-in');
+      window.removeEventListener('scroll', check);
+      window.removeEventListener('resize', check);
+    };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { reveal(); return; }
+    function check() {
+      const r = wrap.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.85 && r.bottom > 0) reveal();
+    }
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    window.addEventListener('resize', check);
+  })();
 </script>
 
 <script>
