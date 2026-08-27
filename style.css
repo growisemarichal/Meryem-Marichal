@@ -1041,6 +1041,11 @@
     align-items: flex-end;
     justify-content: center;
   }
+  .coming-light-scene .coming-light-fallback {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
   .coming-light {
     position: relative;
     z-index: 1;
@@ -1071,7 +1076,6 @@
   @media (prefers-reduced-motion: reduce) {
     .coming-light { animation: none; }
   }
-  .coming-label { margin-top: 0.5rem; }
   .lock-box h2 { margin-top: 1.4rem; }
 
     /* ---------- ANEXOS / GALERÍA SCROLL HORIZONTAL ---------- */
@@ -1215,13 +1219,32 @@
   @media (max-width: 640px) {
     .coming-light-scene { height: 240px; }
   }
-  .coming-cinematic-wrap { position: relative; z-index: 1; }
-  .coming-cinematic .coming-light-wrap { margin-top: 1.5rem; }
-  .coming-cinematic h2 {
-    margin-top: 1.5rem;
-    font-size: clamp(2.4rem, 5vw, 3.6rem);
-    font-style: italic;
+  /* Texto encima de la escena, arriba del todo para no tapar la luz */
+  .coming-text-overlay {
+    position: absolute;
+    top: 1.75rem;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    text-align: center;
+    padding: 0 1.5rem;
+    pointer-events: none;
+  }
+  .coming-text-overlay .coming-label { margin: 0; }
+  .coming-subtitle {
+    margin-top: 0.5rem;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: clamp(1.05rem, 2.4vw, 1.5rem);
     font-weight: 500;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    line-height: 1.35;
+    color: var(--foreground);
+  }
+  @media (max-width: 640px) {
+    .coming-text-overlay { top: 0.9rem; padding: 0 1rem; }
+    .coming-subtitle { margin-top: 0.35rem; font-size: 0.8rem; letter-spacing: 0.05em; line-height: 1.3; }
   }
   .coming-cinematic p.desc {
     margin-top: 1rem;
