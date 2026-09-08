@@ -13,7 +13,7 @@
 (function () {
   "use strict";
 
-  var GA_MEASUREMENT_ID = "G-XXXXXXXXXX";   // Google Analytics 4  -> Administrar > Flujos de datos
+  var GA_MEASUREMENT_ID = "G-03ZCYNLXE3";   // Google Analytics 4  -> Administrar > Flujos de datos
   var CLARITY_PROJECT_ID = "XXXXXXXXXX";    // Microsoft Clarity   -> Settings > Overview
 
   var STORAGE_KEY = "cc-consent-v1";
