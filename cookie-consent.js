@@ -14,7 +14,7 @@
   "use strict";
 
   var GA_MEASUREMENT_ID = "G-03ZCYNLXE3";   // Google Analytics 4  -> Administrar > Flujos de datos
-  var CLARITY_PROJECT_ID = "XXXXXXXXXX";    // Microsoft Clarity   -> Settings > Overview
+  var CLARITY_PROJECT_ID = "yezj6nvqq2";    // Microsoft Clarity   -> Settings > Overview
 
   var STORAGE_KEY = "cc-consent-v1";
   var MAX_AGE_MS = 365 * 24 * 60 * 60 * 1000; // 12 meses
